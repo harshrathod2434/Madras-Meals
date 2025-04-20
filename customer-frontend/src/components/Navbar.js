@@ -19,13 +19,22 @@ const Navbar = () => {
 
   return (
     <>
-      <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="py-2" fixed="top">
+      <BootstrapNavbar 
+        bg="dark" 
+        variant="dark" 
+        expand="lg" 
+        className="py-3 navbar-custom" 
+        fixed="top"
+        style={{ 
+          borderBottom: '2px solid rgba(255, 255, 255, 0.8)'
+        }}
+      >
         <Container>
-          <BootstrapNavbar.Brand as={Link} to="/" className="d-flex align-items-center">
+          <BootstrapNavbar.Brand as={Link} to="/" className="d-flex align-items-center brand-large">
             <Image 
               src="https://res.cloudinary.com/dyzvzef89/image/upload/v1745157332/logo_qz1szy.svg" 
               alt="Madras Meals Logo" 
-              height="30" 
+              height="38" 
               className="me-2" 
             />
             Madras Meals
@@ -53,11 +62,11 @@ const Navbar = () => {
           
           {/* Original navbar structure for desktop */}
           <BootstrapNavbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
+            <Nav className="me-auto nav-links-custom">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               <Nav.Link as={Link} to="/menu">Menu</Nav.Link>
             </Nav>
-            <Nav>
+            <Nav className="nav-links-custom">
               <Nav.Link as={Link} to="/cart" className="d-flex align-items-center">
                 <i className="bi bi-cart-fill me-1"></i>
                 Cart {totalItems > 0 && (
@@ -68,6 +77,9 @@ const Navbar = () => {
                 <>
                   <Nav.Link as={Link} to="/my-orders">My Orders</Nav.Link>
                   <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                  <div className="user-greeting d-flex align-items-center mx-2">
+                    <span className="text-light">Hi, {user.name || user.email.split('@')[0]}</span>
+                  </div>
                   <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
                 </>
               ) : (

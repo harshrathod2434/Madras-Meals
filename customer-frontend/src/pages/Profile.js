@@ -167,7 +167,7 @@ const Profile = () => {
               type="text"
               value={formData.name}
               disabled
-              className="bg-dark text-white border-dark"
+              className="bg-secondary bg-opacity-25 text-white border-secondary"
             />
           </Form.Group>
 
@@ -177,7 +177,7 @@ const Profile = () => {
               type="email"
               value={formData.email}
               disabled
-              className="bg-dark text-white border-dark"
+              className="bg-secondary bg-opacity-25 text-white border-secondary"
             />
           </Form.Group>
 
@@ -191,7 +191,7 @@ const Profile = () => {
               placeholder="Enter your delivery address"
               disabled={!editMode}
               required
-              className={!editMode ? "bg-dark text-white border-dark" : ""}
+              className={!editMode ? "bg-secondary bg-opacity-25 text-white border-secondary" : ""}
             />
           </Form.Group>
 
@@ -205,7 +205,7 @@ const Profile = () => {
                   onChange={handleChange}
                   disabled={!editMode}
                   required
-                  className={!editMode ? "bg-dark text-white border-dark" : ""}
+                  className={!editMode ? "bg-secondary bg-opacity-25 text-white border-secondary" : ""}
                 >
                   {countryCodes.map(country => (
                     <option key={country.code} value={country.code}>
@@ -225,7 +225,7 @@ const Profile = () => {
                   pattern="[0-9]{10}"
                   maxLength="10"
                   required
-                  className={!editMode ? "bg-dark text-white border-dark" : ""}
+                  className={!editMode ? "bg-secondary bg-opacity-25 text-white border-secondary" : ""}
                 />
                 {editMode && (
                   <Form.Text className="text-white">
