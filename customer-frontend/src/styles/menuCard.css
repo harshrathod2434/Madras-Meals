@@ -3,49 +3,74 @@
 .menu-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
-  border: 1px solid #eee;
+  border: none;
   max-width: 100%;
+  background-color: #fff;
 }
 
 .menu-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  border-color: #ddd;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.menu-img-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.menu-img-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.menu-card:hover .menu-img-container::after {
+  opacity: 1;
 }
 
 .card-img-animation {
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
   width: 100%;
-  aspect-ratio: 1/1;
+  height: 280px !important;
   object-fit: cover;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .menu-card:hover .card-img-animation {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .card-title-animation {
   transition: color 0.3s ease;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .menu-card:hover .card-title-animation {
-  color: #0056b3; /* A slightly darker blue on hover instead of an underline */
+  color: #0056b3;
 }
 
 .btn-animation {
   transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .btn-animation:hover {
   transform: scale(1.05);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Quantity Control Styles */
 
 .quantity-controls {
   transition: all 0.3s ease;
+  border-radius: 50px;
+  overflow: hidden;
 }
 
 .btn-quantity {
@@ -70,4 +95,10 @@
   min-width: 40px;
   border-left: none !important;
   border-right: none !important;
+}
+
+@media (max-width: 768px) {
+  .card-img-animation {
+    height: 220px !important;
+  }
 } 

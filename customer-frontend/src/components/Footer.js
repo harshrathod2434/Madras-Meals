@@ -21,7 +21,7 @@ const Footer = () => {
             <p>
               123 Food Street, Chennai, India<br />
               +91 1234567890<br />
-              info@madrasmeals.com
+              <a href="mailto:info@madrasmeals.com" className="text-white text-decoration-none">info@madrasmeals.com</a>
             </p>
           </Col>
           <Col xs={12} md={4} className="mb-3 mb-md-0 text-center">
@@ -34,9 +34,15 @@ const Footer = () => {
           <Col xs={12} md={4} className="text-center">
             <h5>Follow Us</h5>
             <div className="social-links">
-              <a href="#" className="text-white me-3 fs-4"><i className="bi bi-facebook"></i></a>
-              <a href="#" className="text-white me-3 fs-4"><i className="bi bi-instagram"></i></a>
-              <a href="#" className="text-white me-3 fs-4"><i className="bi bi-twitter"></i></a>
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-white me-3 fs-4">
+                <i className="bi bi-facebook"></i>
+              </a>
+              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-white me-3 fs-4">
+                <i className="bi bi-instagram"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white me-3 fs-4">
+                <i className="bi bi-twitter"></i>
+              </a>
             </div>
           </Col>
         </Row>
