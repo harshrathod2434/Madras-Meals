@@ -8,6 +8,7 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [filters, setFilters] = useState({
     status: 'all',
     startDate: '',
@@ -29,9 +30,12 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
+      console.log('Fetching orders...');
       const response = await orderService.getAllOrders();
+      console.log('Orders response:', response.data);
       setOrders(response.data);
     } catch (error) {
+      console.error('Error fetching orders:', error);
       setError('Failed to fetch orders');
     } finally {
       setLoading(false);
@@ -40,12 +44,19 @@ const Orders = () => {
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
+      console.log(`Updating order ${orderId} to status: ${newStatus}`);
       await orderService.updateOrderStatus(orderId, newStatus);
       setOrders(orders.map(order => 
         order._id === orderId ? { ...order, status: newStatus } : order
       ));
+      setSuccessMessage(`Order #${orderId.slice(-6)} status updated to ${newStatus}`);
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
+      console.error('Error updating order status:', error);
       setError('Failed to update order status');
+      // Clear error message after 3 seconds
+      setTimeout(() => setError(''), 3000);
     }
   };
 
@@ -63,6 +74,11 @@ const Orders = () => {
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </Badge>
     );
+  };
+
+  const getStatusOptions = (currentStatus) => {
+    const allStatuses = ['pending', 'preparing', 'ready', 'delivered', 'cancelled'];
+    return allStatuses.filter(status => status !== currentStatus);
   };
 
   const handleFilterChange = (e) => {
@@ -94,8 +110,8 @@ const Orders = () => {
           : new Date(b.createdAt) - new Date(a.createdAt);
       } else if (filters.sortBy === 'price') {
         return filters.sortOrder === 'asc'
-          ? a.totalPrice - b.totalPrice
-          : b.totalPrice - a.totalPrice;
+          ? a.totalAmount - b.totalAmount
+          : b.totalAmount - a.totalAmount;
       }
       return 0;
     });
@@ -113,6 +129,7 @@ const Orders = () => {
       <h1 className="mb-4">Orders</h1>
       
       {error && <Alert variant="danger">{error}</Alert>}
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
       
       <Card className="mb-4">
         <Card.Body>
@@ -208,45 +225,32 @@ const Orders = () => {
           {filteredOrders.map(order => (
             <tr key={order._id}>
               <td>#{order._id.slice(-6)}</td>
-              <td>{order.user.name}</td>
+              <td>{order.user ? order.user.name : 'Unknown'}</td>
               <td>{new Date(order.createdAt).toLocaleString()}</td>
               <td>
                 {order.items.map(item => (
                   <div key={item._id}>
-                    {item.menuItem.name} x {item.quantity}
+                    {item.menuItem ? `${item.menuItem.name} x ${item.quantity}` : `Unknown item x ${item.quantity}`}
                   </div>
                 ))}
               </td>
-              <td>₹{order.totalPrice}</td>
+              <td>₹{order.totalAmount}</td>
               <td>{getStatusBadge(order.status)}</td>
               <td>
-                {order.status === 'pending' && (
-                  <Button
-                    size="sm"
-                    variant="success"
-                    onClick={() => handleStatusUpdate(order._id, 'preparing')}
-                  >
-                    Start Preparing
-                  </Button>
-                )}
-                {order.status === 'preparing' && (
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    onClick={() => handleStatusUpdate(order._id, 'ready')}
-                  >
-                    Mark Ready
-                  </Button>
-                )}
-                {order.status === 'ready' && (
-                  <Button
-                    size="sm"
-                    variant="success"
-                    onClick={() => handleStatusUpdate(order._id, 'delivered')}
-                  >
-                    Mark Delivered
-                  </Button>
-                )}
+                <Form.Select 
+                  size="sm"
+                  onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                  value={order.status}
+                >
+                  <option value={order.status}>
+                    Current: {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  </option>
+                  {getStatusOptions(order.status).map(status => (
+                    <option key={status} value={status}>
+                      Change to: {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </option>
+                  ))}
+                </Form.Select>
               </td>
             </tr>
           ))}

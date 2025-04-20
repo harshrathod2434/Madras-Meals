@@ -110,7 +110,12 @@ const updateOrderStatus = async (req, res) => {
     order.status = status;
     await order.save();
     
-    res.json(order);
+    // Populate the order data before sending the response
+    const updatedOrder = await Order.findById(order._id)
+      .populate('items.menuItem')
+      .populate('user', 'name email');
+    
+    res.json(updatedOrder);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

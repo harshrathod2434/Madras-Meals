@@ -11,23 +11,8 @@ import Navbar from './components/Navbar';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-
-// Placeholder component for features not yet implemented
-const ComingSoon = ({ feature }) => (
-  <div className="container py-5 text-center">
-    <h1 className="mb-4">{feature}</h1>
-    <div className="alert alert-info">
-      <h4>Coming Soon!</h4>
-      <p>This feature is under development and will be available shortly.</p>
-    </div>
-    <button 
-      className="btn btn-primary mt-3"
-      onClick={() => window.history.back()}
-    >
-      Go Back
-    </button>
-  </div>
-);
+import AdminManagement from './pages/AdminManagement';
+import ComingSoon from './pages/ComingSoon';
 
 // PrivateRoute component to protect routes
 const PrivateRoute = ({ element }) => {
@@ -71,8 +56,10 @@ const AppRoutes = () => {
           {/* Order Routes */}
           <Route path="/orders" element={<PrivateRoute element={<Orders />} />} />
           
+          {/* Admin Management */}
+          <Route path="/admin-access" element={<PrivateRoute element={<AdminManagement />} />} />
+          
           {/* Placeholder Routes for features coming soon */}
-          <Route path="/admin-access" element={<PrivateRoute element={<ComingSoon feature="Admin Access Management" />} />} />
           <Route path="/customers" element={<PrivateRoute element={<ComingSoon feature="Customer Profiles" />} />} />
           <Route path="/analytics" element={<PrivateRoute element={<ComingSoon feature="Analytics & Reports" />} />} />
           

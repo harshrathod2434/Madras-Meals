@@ -50,7 +50,7 @@ const Dashboard = () => {
       icon: 'bi-people',
       color: '#e74a3b',
       link: '/admin-access',
-      onClick: () => alert('Admin Access Management - This feature is coming soon!')
+      onClick: () => navigate('/admin-access')
     },
     {
       id: 5,

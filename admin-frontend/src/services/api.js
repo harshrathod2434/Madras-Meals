@@ -71,7 +71,7 @@ export const menuService = {
 // Order Management
 export const orderService = {
   // Get all orders
-  getAllOrders: () => api.get('/orders'),
+  getAllOrders: () => api.get('/orders/admin/all'),
   
   // Get specific order
   getOrder: (id) => api.get(`/orders/${id}`),
@@ -112,6 +112,18 @@ export const authService = {
   // Change password
   changePassword: (oldPassword, newPassword) => 
     api.put('/auth/change-password', { oldPassword, newPassword })
+};
+
+// Admin Management
+export const adminService = {
+  // Get all admin users
+  getAllAdmins: () => api.get('/admin'),
+  
+  // Create a new admin user
+  createAdmin: (adminData) => api.post('/admin', adminData),
+  
+  // Delete an admin user
+  deleteAdmin: (id) => api.delete(`/admin/${id}`)
 };
 
 // Add request interceptor for auth token

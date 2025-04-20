@@ -11,8 +11,8 @@ const { auth, adminAuth } = require('../middleware/auth');
 
 router.post('/', auth, createOrder);
 router.get('/', auth, getOrders);
-router.get('/:id', auth, getOrder);
 router.get('/admin/all', auth, adminAuth, getAllOrders);
+router.get('/:id', auth, getOrder);
 router.put('/:id/status', auth, adminAuth, updateOrderStatus);
 
 module.exports = router; 
