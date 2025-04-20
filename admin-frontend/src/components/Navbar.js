@@ -16,7 +16,7 @@ const Navbar = () => {
     <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container>
         <BootstrapNavbar.Brand as={Link} to="/dashboard">
-          Admin Panel
+          Madras Meals - Admin Panel
         </BootstrapNavbar.Brand>
         
         <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
@@ -25,6 +25,9 @@ const Navbar = () => {
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/dashboard">
               Dashboard
+            </Nav.Link>
+            <Nav.Link as={Link} to="/menu">
+              Menu
             </Nav.Link>
             <Nav.Link as={Link} to="/orders">
               Orders
@@ -37,8 +40,8 @@ const Navbar = () => {
           <Nav>
             {user && (
               <>
-                <span className="navbar-text me-3 text-light">
-                  Welcome, {user.name}
+                <span className="navbar-text me-3 text-light d-flex align-items-center">
+                  Hi, {user.name}
                 </span>
                 <Button
                   variant="outline-light"

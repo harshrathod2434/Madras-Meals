@@ -9,13 +9,21 @@ const profileRoutes = require('./routes/profile');
 
 const app = express();
 
-// Middleware
-app.use(cors({
-  origin: 'http://localhost:3000',
+// CORS configuration
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:4000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
 
 // Request logging middleware
@@ -44,7 +52,7 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
     // Start server
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 2000;
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

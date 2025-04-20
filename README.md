@@ -1,65 +1,31 @@
-# MadrasMeals Restaurant Ordering System
+# Madras Meals
 
-A full-stack restaurant ordering website with separate customer and admin interfaces.
-
-## Tech Stack
-
-- **Frontend (Customer site)**: React with JavaScript, Bootstrap
-- **Frontend (Admin site)**: React with JavaScript, Bootstrap
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB Atlas
-- **Authentication**: JWT
-- **Image Hosting**: Cloudinary
+A full-stack web application for a food delivery service with separate admin and customer frontends.
 
 ## Project Structure
 
-```
-madras-meals/
-├── backend/              # Backend code
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Custom middleware
-│   ├── models/           # MongoDB models
-│   └── routes/           # API routes
-├── customer-frontend/    # Customer-facing React app
-├── admin-frontend/       # Admin-facing React app
-├── server.js            # Main server file
-├── seed.js              # Database seeding script
-└── package.json         # Backend dependencies
-```
+- **backend/** - Node.js/Express REST API
+- **admin-frontend/** - React admin dashboard for managing menu items and orders
+- **customer-frontend/** - React customer-facing website for ordering food
+
+## Technologies Used
+
+- **Backend**: Node.js, Express, MongoDB, JWT Authentication
+- **Frontend**: React, Bootstrap, React Router, Context API
+- **Authentication**: JWT (JSON Web Tokens)
 
 ## Setup Instructions
 
+### Prerequisites
+
+- Node.js (v14 or higher)
+- MongoDB
+
 ### Backend Setup
 
-1. Install dependencies:
+1. Navigate to the backend directory:
    ```bash
-   npm install
-   ```
-
-2. Create a `.env` file in the root directory with the following variables:
-   ```
-   JWT_SECRET=your_jwt_secret
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   MONGO_URI=your_mongodb_uri
-   ```
-
-3. Seed the database with initial menu items:
-   ```bash
-   npm run seed
-   ```
-
-4. Start the backend server:
-   ```bash
-   npm run dev
-   ```
-
-### Customer Frontend Setup
-
-1. Navigate to the customer frontend directory:
-   ```bash
-   cd customer-frontend
+   cd backend
    ```
 
 2. Install dependencies:
@@ -67,7 +33,14 @@ madras-meals/
    npm install
    ```
 
-3. Start the development server:
+3. Create a `.env` file with the following variables:
+   ```
+   PORT=2000
+   MONGODB_URI=mongodb://localhost:27017/MadrasMeals
+   JWT_SECRET=your-secret-key
+   ```
+
+4. Start the backend server:
    ```bash
    npm start
    ```
@@ -84,51 +57,72 @@ madras-meals/
    npm install
    ```
 
-3. Start the development server:
+3. Start the admin frontend:
    ```bash
    npm start
    ```
 
-## Running the Application
+4. The admin frontend will be running at http://localhost:3001
 
-1. Start the backend server (port 9000)
-2. Start the customer frontend (port 9001)
-3. Start the admin frontend (port 9002)
+### Customer Frontend Setup
+
+1. Navigate to the customer frontend directory:
+   ```bash
+   cd customer-frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the customer frontend:
+   ```bash
+   npm start
+   ```
+
+4. The customer frontend will be running at http://localhost:3000
 
 ## Features
 
-### Customer Website
+### Customer Portal
 - Browse menu items
 - Add items to cart
 - Place orders
-- View order history
-- User authentication
+- View order history and status
+- User registration and authentication
 
-### Admin Dashboard
-- Manage menu items
-- View and update orders
-- Import menu items via CSV
-- Admin authentication
+### Admin Portal
+- Manage menu items (create, update, delete)
+- View and manage orders
+- Update order status
+- Admin-only authentication
+
+## Admin Login Credentials
+
+- Email: admin@madrasmeals.com
+- Password: adminPassword123
 
 ## API Endpoints
 
 ### Authentication
 - POST /api/auth/register - Register a new user
-- POST /api/auth/login - Login user
-- POST /api/auth/logout - Logout user
-- GET /api/auth/me - Get current user
+- POST /api/auth/login - User login
+- GET /api/auth/me - Get current user profile
 
-### Menu Items
+### Menu
 - GET /api/menu - Get all menu items
-- GET /api/menu/:id - Get a specific menu item
-- POST /api/menu - Create a new menu item (admin only)
-- PUT /api/menu/:id - Update a menu item (admin only)
-- DELETE /api/menu/:id - Delete a menu item (admin only)
-- POST /api/menu/import - Import menu items from CSV (admin only)
+- GET /api/menu/:id - Get specific menu item
+- POST /api/menu - Create menu item (admin only)
+- PUT /api/menu/:id - Update menu item (admin only)
+- DELETE /api/menu/:id - Delete menu item (admin only)
 
 ### Orders
 - POST /api/orders - Create a new order
-- GET /api/orders/my-orders - Get user's orders
-- GET /api/orders - Get all orders (admin only)
+- GET /api/orders - Get user's orders
+- GET /api/orders/:id - Get specific order
+- GET /api/orders/admin/all - Get all orders (admin only)
 - PUT /api/orders/:id/status - Update order status (admin only)
-- PUT /api/orders/:id/items - Update order items (admin only) 
+
+### Profile
+- PUT /api/profile - Update user profile 

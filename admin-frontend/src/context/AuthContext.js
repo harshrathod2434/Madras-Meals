@@ -18,8 +18,14 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await authService.getCurrentUser();
-          setUser(response.data);
-          setIsAuthenticated(true);
+          // Verify user is an admin
+          if (response.data.role === 'admin') {
+            setUser(response.data);
+            setIsAuthenticated(true);
+          } else {
+            console.error('User is not an admin');
+            localStorage.removeItem('adminToken');
+          }
         } catch (error) {
           console.error('Authentication check failed:', error);
           localStorage.removeItem('adminToken');
@@ -35,18 +41,43 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (credentials) => {
     try {
+      console.log('Login attempt with:', credentials);
       const response = await authService.login(credentials);
+      console.log('Login response:', response.data);
+      
       const { token, user } = response.data;
       
+      // Verify user is an admin
+      if (user.role !== 'admin') {
+        console.error('User is not an admin:', user);
+        return { 
+          success: false, 
+          error: 'You do not have admin privileges' 
+        };
+      }
+      
+      console.log('Setting token and user:', token, user);
       localStorage.setItem('adminToken', token);
       setUser(user);
       setIsAuthenticated(true);
+      console.log('isAuthenticated set to:', true);
       
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
+      console.error('Error response:', error.response?.data);
+      
+      // Handle different error scenarios
+      if (error.response?.status === 401) {
+        return { 
+          success: false, 
+          error: 'Invalid email or password' 
+        };
+      }
+      
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Login failed' 
+        error: error.response?.data?.error || 'Login failed. Please try again.' 
       };
     }
   };

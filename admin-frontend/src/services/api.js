@@ -4,7 +4,13 @@ const API_URL = 'http://localhost:2000/api';
 
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  // Ensure CORS credentials work properly
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN'
 });
 
 // Menu Management
@@ -41,6 +47,24 @@ export const menuService = {
         'Content-Type': 'multipart/form-data'
       }
     });
+  },
+  
+  // Import menu items from CSV
+  importMenuItemsFromCSV: (csvFile) => {
+    const formData = new FormData();
+    formData.append('csv', csvFile);
+    return api.post('/menu/import-csv', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  },
+  
+  // Get CSV template
+  getCSVTemplate: () => {
+    // Use direct URL for downloading files
+    window.open(`${API_URL}/menu/csv-template`, '_blank');
+    return Promise.resolve(); // Return a resolved promise for consistency
   }
 };
 
@@ -71,8 +95,13 @@ export const orderService = {
 
 // Authentication
 export const authService = {
-  // Login
-  login: (credentials) => api.post('/auth/login', credentials),
+  // Login - explicitly include credentials
+  login: (credentials) => api.post('/auth/login', credentials, {
+    withCredentials: true,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }),
   
   // Logout
   logout: () => api.post('/auth/logout'),
@@ -95,6 +124,7 @@ api.interceptors.request.use(
     return config;
   },
   error => {
+    console.error('Request error interceptor:', error);
     return Promise.reject(error);
   }
 );
@@ -103,11 +133,17 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   error => {
+    console.error('Response error interceptor:', error);
+    
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem('adminToken');
-      window.location.href = '/login';
+      // Only clear token and redirect for auth endpoints when already logged in
+      if (error.config.url !== '/auth/login' && localStorage.getItem('adminToken')) {
+        console.log('Unauthorized access detected, redirecting to login');
+        localStorage.removeItem('adminToken');
+        window.location.href = '/login';
+      }
     }
+    
     return Promise.reject(error);
   }
 );

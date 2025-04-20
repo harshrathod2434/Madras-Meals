@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Alert, Card, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -8,24 +8,37 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
     setError('');
     setLoading(true);
 
     try {
+      console.log('Submitting login form with:', { email, password });
       const result = await login({ email, password });
+      console.log('Login result:', result);
       
-      if (!result.success) {
+      if (result.success) {
+        console.log('Login successful, navigating to dashboard');
+        navigate('/dashboard');
+      } else {
+        console.log('Login failed:', result.error);
         setError(result.error || 'Invalid credentials');
+        setLoading(false);
       }
-      // Navigation is handled by our route guards in App.js
     } catch (error) {
+      console.error('Login submission error:', error);
       setError('An error occurred during login');
-    } finally {
       setLoading(false);
     }
   };

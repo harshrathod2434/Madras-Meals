@@ -62,9 +62,11 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    console.log('Starting login process...');
+    console.log('==== LOGIN PROCESS START ====');
+    console.log('Request body:', req.body);
     const { email, password } = req.body;
     console.log('Login attempt for email:', email);
+    console.log('Password received (length):', password ? password.length : 0);
 
     // Ensure database connection first
     await connect();
@@ -76,8 +78,10 @@ const login = async (req, res) => {
     console.log('User found:', user ? {
       id: user._id,
       name: user.name,
-      role: user.role
-    } : 'No');
+      email: user.email,
+      role: user.role,
+      passwordLength: user.password ? user.password.length : 0
+    } : 'No user found');
 
     if (!user) {
       console.log('Login failed: User not found');
@@ -87,7 +91,7 @@ const login = async (req, res) => {
     // Check password
     console.log('Checking password...');
     const isMatch = await user.comparePassword(password);
-    console.log('Password match:', isMatch);
+    console.log('Password match result:', isMatch);
 
     if (!isMatch) {
       console.log('Login failed: Invalid password');
@@ -106,6 +110,7 @@ const login = async (req, res) => {
       role: user.role,
       tokenGenerated: !!token
     });
+    console.log('==== LOGIN PROCESS END ====');
 
     res.json({
       user: {
@@ -117,6 +122,7 @@ const login = async (req, res) => {
       token
     });
   } catch (error) {
+    console.error('==== LOGIN ERROR ====');
     console.error('Login error details:', error);
     res.status(400).json({ error: error.message });
   }

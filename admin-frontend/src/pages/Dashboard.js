@@ -1,199 +1,119 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Table, Badge, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { orderService, menuService } from '../services/api';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
-  const [orders, setOrders] = useState([]);
-  const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user || user.role !== 'admin') {
       navigate('/login');
-      return;
     }
-
-    const fetchData = async () => {
-      try {
-        const [ordersResponse, menuResponse] = await Promise.all([
-          orderService.getAllOrders(),
-          menuService.getAllMenuItems()
-        ]);
-        setOrders(ordersResponse.data);
-        setMenuItems(menuResponse.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
   }, [user, navigate]);
 
-  const handleStatusUpdate = async (orderId, newStatus) => {
-    try {
-      await orderService.updateOrderStatus(orderId, newStatus);
-      setOrders(orders.map(order => 
-        order._id === orderId ? { ...order, status: newStatus } : order
-      ));
-    } catch (error) {
-      console.error('Error updating order status:', error);
+  // Dashboard card data
+  const dashboardCards = [
+    {
+      id: 1,
+      title: 'View & Edit Menu Items',
+      description: 'Browse and modify existing menu items',
+      icon: 'bi-menu-button-wide',
+      color: '#4e73df',
+      link: '/menu',
+      onClick: () => navigate('/menu')
+    },
+    {
+      id: 2,
+      title: 'Add Menu Items',
+      description: 'Add new dishes manually or upload a CSV file',
+      icon: 'bi-plus-circle',
+      color: '#1cc88a',
+      link: '/menu/add',
+      onClick: () => navigate('/menu/add')
+    },
+    {
+      id: 3,
+      title: 'View & Edit Orders',
+      description: 'Manage customer orders and update status',
+      icon: 'bi-cart3',
+      color: '#f6c23e',
+      link: '/orders',
+      onClick: () => navigate('/orders')
+    },
+    {
+      id: 4,
+      title: 'Manage Admin Access',
+      description: 'Add or remove admin users and assign roles',
+      icon: 'bi-people',
+      color: '#e74a3b',
+      link: '/admin-access',
+      onClick: () => alert('Admin Access Management - This feature is coming soon!')
+    },
+    {
+      id: 5,
+      title: 'Customer Profiles',
+      description: 'View customer details and order history',
+      icon: 'bi-person-lines-fill',
+      color: '#36b9cc',
+      link: '/customers',
+      onClick: () => alert('Customer Profiles - This feature is coming soon!')
+    },
+    {
+      id: 6,
+      title: 'Analytics & Reports',
+      description: 'Visualize order trends and revenue growth',
+      icon: 'bi-bar-chart-line',
+      color: '#6f42c1',
+      link: '/analytics',
+      onClick: () => alert('Analytics & Reports - This feature is coming soon!')
     }
-  };
+  ];
 
-  const getStatusBadge = (status) => {
-    const variants = {
-      pending: 'warning',
-      preparing: 'info',
-      ready: 'primary',
-      delivered: 'success',
-      cancelled: 'danger'
-    };
-
-    return (
-      <Badge bg={variants[status] || 'secondary'}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
-  };
-
-  if (loading) {
-    return (
-      <Container className="py-4 text-center">
-        <h1>Loading...</h1>
-      </Container>
-    );
+  if (!user) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <Container className="py-4">
-      <h1 className="mb-4">Admin Dashboard</h1>
+    <>
+      <Container className="py-4">
+        {/* Welcome Message */}
+        <div className="welcome-section text-center mb-4">
+          <h1 className="display-4">Welcome, {user.name}</h1>
+          <p className="lead text-muted">Manage your restaurant operations efficiently</p>
+        </div>
 
-      <Row className="mb-4">
-        <Col md={6}>
-          <Card>
-            <Card.Header>
-              <h4 className="mb-0">Recent Orders</h4>
-            </Card.Header>
-            <Card.Body>
-              <Table striped hover>
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.slice(0, 5).map(order => (
-                    <tr key={order._id}>
-                      <td>#{order._id.slice(-6)}</td>
-                      <td>{getStatusBadge(order.status)}</td>
-                      <td>₹{order.totalPrice}</td>
-                      <td>
-                        {order.status === 'pending' && (
-                          <Button
-                            size="sm"
-                            variant="success"
-                            onClick={() => handleStatusUpdate(order._id, 'preparing')}
-                          >
-                            Start Preparing
-                          </Button>
-                        )}
-                        {order.status === 'preparing' && (
-                          <Button
-                            size="sm"
-                            variant="primary"
-                            onClick={() => handleStatusUpdate(order._id, 'ready')}
-                          >
-                            Mark Ready
-                          </Button>
-                        )}
-                        {order.status === 'ready' && (
-                          <Button
-                            size="sm"
-                            variant="success"
-                            onClick={() => handleStatusUpdate(order._id, 'delivered')}
-                          >
-                            Mark Delivered
-                          </Button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col md={6}>
-          <Card>
-            <Card.Header>
-              <h4 className="mb-0">Menu Items</h4>
-            </Card.Header>
-            <Card.Body>
-              <Table striped hover>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {menuItems.slice(0, 5).map(item => (
-                    <tr key={item._id}>
-                      <td>{item.name}</td>
-                      <td>₹{item.price}</td>
-                      <td>
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          className="me-2"
-                          onClick={() => navigate(`/menu/edit/${item._id}`)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="danger"
-                          onClick={() => navigate(`/menu/delete/${item._id}`)}
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      <div className="text-center">
-        <Button
-          variant="primary"
-          className="me-2"
-          onClick={() => navigate('/orders')}
-        >
-          View All Orders
-        </Button>
-        <Button
-          variant="success"
-          onClick={() => navigate('/menu/new')}
-        >
-          Add New Menu Item
-        </Button>
-      </div>
-    </Container>
+        {/* Dashboard Cards Grid */}
+        <Row className="g-4">
+          {dashboardCards.map(card => (
+            <Col key={card.id} md={6} lg={4}>
+              <Card 
+                className="dashboard-card h-100 shadow-sm" 
+                onClick={card.onClick} 
+                style={{ cursor: 'pointer' }}
+              >
+                <Card.Body className="text-center">
+                  <div className="icon-circle" style={{ backgroundColor: card.color }}>
+                    <i className={`bi ${card.icon} fs-4`}></i>
+                  </div>
+                  <Card.Title className="mt-3 mb-2 fw-bold">{card.title}</Card.Title>
+                  <Card.Text className="text-muted">{card.description}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+      
+      {/* Footer */}
+      <footer className="footer mt-auto py-3 bg-light">
+        <Container className="text-center">
+          <span className="text-muted">© 2024 Madras Meals. All rights reserved.</span>
+        </Container>
+      </footer>
+    </>
   );
 };
 

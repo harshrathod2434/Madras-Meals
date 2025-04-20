@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Form, Button, Alert, Tabs, Tab } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { menuService } from '../services/api';
+import CSVImport from '../components/CSVImport';
 
 const AddMenuItem = () => {
   const [name, setName] = useState('');
@@ -11,6 +12,7 @@ const AddMenuItem = () => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('single');
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -48,79 +50,96 @@ const AddMenuItem = () => {
     }
   };
 
+  const handleCsvImportSuccess = (items) => {
+    // Navigate to dashboard after successful import
+    navigate('/dashboard');
+  };
+
   return (
-    <Container className="py-4" style={{ maxWidth: '600px' }}>
-      <h1 className="mb-4">Add New Menu Item</h1>
+    <Container className="py-4" style={{ maxWidth: '800px' }}>
+      <h1 className="mb-4">Add Menu Items</h1>
       
-      {error && <Alert variant="danger">{error}</Alert>}
-      
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter item name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </Form.Group>
+      <Tabs
+        activeKey={activeTab}
+        onSelect={(key) => setActiveTab(key)}
+        className="mb-4"
+        fill
+      >
+        <Tab eventKey="single" title="Add Single Item">
+          {error && <Alert variant="danger">{error}</Alert>}
+          
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter item name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            placeholder="Enter item description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter item description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Price (₹)</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Enter price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            min="0"
-            step="0.01"
-            required
-          />
-        </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Price (₹)</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter price"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                min="0"
+                step="0.01"
+                required
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Image</Form.Label>
-          <Form.Control
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            required
-          />
-          <Form.Text className="text-muted">
-            Recommended size: 800x600 pixels
-          </Form.Text>
-        </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                required
+              />
+              <Form.Text className="text-muted">
+                Recommended size: 800x600 pixels
+              </Form.Text>
+            </Form.Group>
 
-        <div className="d-flex justify-content-between">
-          <Button
-            variant="secondary"
-            onClick={() => navigate('/dashboard')}
-            disabled={loading}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? 'Creating...' : 'Create Menu Item'}
-          </Button>
-        </div>
-      </Form>
+            <div className="d-flex justify-content-between">
+              <Button
+                variant="secondary"
+                onClick={() => navigate('/dashboard')}
+                disabled={loading}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? 'Creating...' : 'Create Menu Item'}
+              </Button>
+            </div>
+          </Form>
+        </Tab>
+        <Tab eventKey="bulk" title="Bulk Import (CSV)">
+          <CSVImport onImportSuccess={handleCsvImportSuccess} />
+        </Tab>
+      </Tabs>
     </Container>
   );
 };
