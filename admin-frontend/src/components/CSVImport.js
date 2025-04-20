@@ -20,10 +20,21 @@ const CSVImport = ({ onImportSuccess }) => {
 
   const handleDownloadTemplate = async () => {
     try {
+      setError('');
+      const downloadBtn = document.querySelector('[data-download-template]');
+      if (downloadBtn) downloadBtn.disabled = true;
+      
       await menuService.getCSVTemplate();
+      setSuccess('Template downloaded successfully!');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       console.error('Error downloading template:', err);
-      setError('Failed to download CSV template');
+      setError('Failed to download CSV template. Please try again.');
+    } finally {
+      const downloadBtn = document.querySelector('[data-download-template]');
+      if (downloadBtn) downloadBtn.disabled = false;
     }
   };
 
@@ -43,11 +54,12 @@ const CSVImport = ({ onImportSuccess }) => {
       const response = await menuService.importMenuItemsFromCSV(csvFile);
       console.log('Import response:', response);
       
-      setSuccess(`Successfully imported ${response.data.items.length} menu items!`);
-      setCsvFile(null);
+      const importCount = response.data.items.length;
+      setSuccess(`Successfully imported ${importCount} menu items!`);
       
       // Reset the file input
       e.target.reset();
+      setCsvFile(null);
       
       // Notify parent component
       if (onImportSuccess) {
@@ -107,6 +119,7 @@ const CSVImport = ({ onImportSuccess }) => {
               variant="outline-secondary" 
               onClick={handleDownloadTemplate} 
               disabled={isUploading}
+              data-download-template
             >
               <i className="bi bi-download me-1"></i> Download Template
             </Button>

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { menuService } from '../services/api';
 import CSVImport from '../components/CSVImport';
+import BackButton from '../components/BackButton';
 
 const AddMenuItem = () => {
   const [name, setName] = useState('');
@@ -11,6 +12,7 @@ const AddMenuItem = () => {
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('single');
   const { user } = useAuth();
@@ -22,9 +24,22 @@ const AddMenuItem = () => {
     }
   };
 
+  const resetForm = () => {
+    setName('');
+    setDescription('');
+    setPrice('');
+    setImage(null);
+    // Reset file input by recreating it
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     if (!user || user.role !== 'admin') {
@@ -41,8 +56,9 @@ const AddMenuItem = () => {
         formData.append('image', image);
       }
 
-      await menuService.createMenuItem(formData);
-      navigate('/dashboard');
+      const response = await menuService.createMenuItem(formData);
+      setSuccess(`Menu item "${response.data.name}" was successfully created!`);
+      resetForm();
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to create menu item');
     } finally {
@@ -51,12 +67,13 @@ const AddMenuItem = () => {
   };
 
   const handleCsvImportSuccess = (items) => {
-    // Navigate to dashboard after successful import
-    navigate('/dashboard');
+    setSuccess(`Successfully imported ${items.length} menu items!`);
+    setActiveTab('single');
   };
 
   return (
     <Container className="py-4" style={{ maxWidth: '800px' }}>
+      <BackButton to="/dashboard" label="Back to Dashboard" />
       <h1 className="mb-4">Add Menu Items</h1>
       
       <Tabs
@@ -66,6 +83,7 @@ const AddMenuItem = () => {
         fill
       >
         <Tab eventKey="single" title="Add Single Item">
+          {success && <Alert variant="success">{success}</Alert>}
           {error && <Alert variant="danger">{error}</Alert>}
           
           <Form onSubmit={handleSubmit}>

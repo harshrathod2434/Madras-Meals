@@ -166,6 +166,64 @@ const deleteMenuItem = async (req, res) => {
 };
 
 /**
+ * Delete multiple menu items at once
+ */
+const deleteMultipleMenuItems = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Valid array of item IDs is required' });
+    }
+    
+    console.log(`Attempting to delete ${ids.length} menu items`);
+    
+    // Convert string IDs to ObjectIds and handle validation
+    const validIds = [];
+    const invalidIds = [];
+    
+    ids.forEach(id => {
+      try {
+        if (ObjectId.isValid(id)) {
+          validIds.push(id);
+        } else {
+          invalidIds.push(id);
+        }
+      } catch (err) {
+        invalidIds.push(id);
+      }
+    });
+    
+    if (validIds.length === 0) {
+      return res.status(400).json({ 
+        error: 'No valid IDs provided',
+        invalidIds
+      });
+    }
+    
+    // Delete all valid items
+    const result = await MenuItem.deleteMany({ _id: { $in: validIds } });
+    
+    // Check results
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'No menu items found with the provided IDs' });
+    }
+    
+    // Report success with details
+    res.json({ 
+      message: `Successfully deleted ${result.deletedCount} menu items`,
+      deletedCount: result.deletedCount,
+      totalRequested: ids.length,
+      invalidIds: invalidIds.length > 0 ? invalidIds : undefined
+    });
+    
+  } catch (error) {
+    console.error('Error deleting multiple menu items:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
  * Process a CSV file to import multiple menu items at once
  */
 const importMenuItemsFromCSV = async (req, res) => {
@@ -275,16 +333,21 @@ const importMenuItemsFromCSV = async (req, res) => {
  */
 const getCSVTemplate = (req, res) => {
   try {
-    // Create CSV content with headers and a sample row
+    console.log('Generating CSV template file...');
+    
+    // Create CSV content with headers and sample rows
     const csvContent = 
-      'name,description,price,category,isAvailable,image\n' +
-      'Sample Dosa,A delicious south indian dish,150,main course,true,https://res.cloudinary.com/dyzvzef89/image/upload/v1744968420/madras-meals/default-food.jpg\n' +
-      'Masala Dosa,Crispy dosa with potato filling,180,main course,true,\n' +
+      'name,description,price,category,isAvailable,image\r\n' +
+      'Sample Dosa,A delicious south indian dish,150,main course,true,https://res.cloudinary.com/dyzvzef89/image/upload/v1744968420/madras-meals/default-food.jpg\r\n' +
+      'Masala Dosa,Crispy dosa with potato filling,180,main course,true,\r\n' +
       'Filter Coffee,Strong south indian coffee,50,beverage,true,';
     
     // Set response headers for CSV download
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="menu-items-template.csv"');
+    res.setHeader('Cache-Control', 'no-cache');
+    
+    console.log('Sending CSV template with content length:', csvContent.length);
     
     // Send the CSV content
     res.send(csvContent);
@@ -301,6 +364,7 @@ module.exports = {
   createMenuItem,
   updateMenuItem,
   deleteMenuItem,
+  deleteMultipleMenuItems,
   importMenuItemsFromCSV,
   getCSVTemplate
 }; 
