@@ -1,38 +1,3 @@
-/* Navbar custom styles */
-.navbar-custom {
-  min-height: 70px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Increase brand size */
-.brand-large {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-/* Increase nav links size */
-.nav-links-custom .nav-link {
-  font-size: 1.1rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-}
-
-/* User greeting styles */
-.user-greeting {
-  font-size: 1.05rem;
-  font-weight: 500;
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
-  padding-left: 15px;
-  margin-left: 5px;
-}
-
-.user-greeting span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px;
-}
-
 .cart-badge {
   top: -5px;
   right: -5px;
@@ -47,12 +12,12 @@
 
 /* Spacer to prevent content from being hidden behind the fixed navbar */
 .navbar-spacer {
-  height: 70px; /* Adjusted to match the increased navbar height */
+  height: 60px; /* Adjust to match your navbar height */
 }
 
 @media (max-width: 992px) {
   .navbar-brand {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   
   .navbar .container {
@@ -61,13 +26,7 @@
   }
   
   .navbar-spacer {
-    height: 70px; /* Keep consistent height for mobile */
-  }
-  
-  .user-greeting {
-    border-left: none;
-    padding-left: 0;
-    margin: 8px 0;
+    height: 56px; /* Slightly smaller for mobile */
   }
 }
 
@@ -75,15 +34,11 @@
 @media (max-width: 576px) {
   .navbar .bi-book-fill,
   .navbar .bi-cart-fill {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
   
   .cart-badge {
     top: -8px;
     right: -8px;
-  }
-  
-  .user-greeting span {
-    max-width: 120px;
   }
 } 
