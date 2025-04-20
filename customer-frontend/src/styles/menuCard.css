@@ -1,0 +1,73 @@
+/* Menu Card Hover Animations */
+
+.menu-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  border: 1px solid #eee;
+  max-width: 100%;
+}
+
+.menu-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-color: #ddd;
+}
+
+.card-img-animation {
+  transition: transform 0.5s ease;
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-card:hover .card-img-animation {
+  transform: scale(1.05);
+}
+
+.card-title-animation {
+  transition: color 0.3s ease;
+}
+
+.menu-card:hover .card-title-animation {
+  color: #0056b3; /* A slightly darker blue on hover instead of an underline */
+}
+
+.btn-animation {
+  transition: all 0.3s ease;
+}
+
+.btn-animation:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Quantity Control Styles */
+
+.quantity-controls {
+  transition: all 0.3s ease;
+}
+
+.btn-quantity {
+  padding: 0 8px !important;
+  border-radius: 0 !important;
+  font-weight: bold;
+  border-color: #007bff !important;
+  color: #007bff !important;
+  background-color: transparent !important;
+}
+
+.btn-quantity:hover {
+  background-color: #f0f8ff !important;
+}
+
+.quantity-display {
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold;
+  min-width: 40px;
+  border-left: none !important;
+  border-right: none !important;
+} 

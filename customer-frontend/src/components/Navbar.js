@@ -1,0 +1,61 @@
+import React from 'react';
+import { Navbar as BootstrapNavbar, Nav, Container, Badge, Image } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
+
+const Navbar = () => {
+  const { user, logout } = useAuth();
+  const { cart } = useCart();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  return (
+    <BootstrapNavbar bg="dark" variant="dark" expand="lg">
+      <Container>
+        <BootstrapNavbar.Brand as={Link} to="/" className="d-flex align-items-center">
+          <Image 
+            src="https://res.cloudinary.com/dyzvzef89/image/upload/v1745157332/logo_qz1szy.svg" 
+            alt="Madras Meals Logo" 
+            height="30" 
+            className="me-2" 
+          />
+          Madras Meals
+        </BootstrapNavbar.Brand>
+        <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
+        <BootstrapNavbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="/">Home</Nav.Link>
+            <Nav.Link as={Link} to="/menu">Menu</Nav.Link>
+          </Nav>
+          <Nav>
+            <Nav.Link as={Link} to="/cart" className="d-flex align-items-center">
+              <i className="bi bi-cart-fill me-1"></i>
+              Cart {cart.length > 0 && (
+                <Badge bg="primary" className="ms-1">{cart.length}</Badge>
+              )}
+            </Nav.Link>
+            {user ? (
+              <>
+                <Nav.Link as={Link} to="/my-orders">My Orders</Nav.Link>
+                <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
+                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/login">Login</Nav.Link>
+                <Nav.Link as={Link} to="/register">Register</Nav.Link>
+              </>
+            )}
+          </Nav>
+        </BootstrapNavbar.Collapse>
+      </Container>
+    </BootstrapNavbar>
+  );
+};
+
+export default Navbar; 
