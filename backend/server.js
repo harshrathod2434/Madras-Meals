@@ -7,13 +7,16 @@ const menuRoutes = require('./routes/menu');
 const orderRoutes = require('./routes/orders');
 const profileRoutes = require('./routes/profile');
 
-// Try to load admin routes with error handling
-let adminRoutes;
+// Try to load admin and customer routes with error handling
+let adminRoutes, customerRoutes;
 try {
   adminRoutes = require('./routes/admin');
   console.log('Successfully loaded admin routes');
+  
+  customerRoutes = require('./routes/customer');
+  console.log('Successfully loaded customer routes');
 } catch (error) {
-  console.error('Failed to load admin routes:', error);
+  console.error('Failed to load routes:', error);
 }
 
 const app = express();
@@ -69,6 +72,24 @@ if (adminRoutes) {
   });
 } else {
   console.error('Admin routes not available');
+}
+
+// Add customer routes
+if (customerRoutes) {
+  console.log('Setting up customer routes');
+  app.use('/api/customers', (req, res, next) => {
+    console.log('Customer route requested:', req.method, req.url);
+    console.log('Customer route auth header:', req.headers.authorization);
+    // Continue with request handling
+    next();
+  }, customerRoutes);
+  
+  // Add a test customer route
+  app.get('/api/customers-test', (req, res) => {
+    res.json({ message: 'Customer test route is working' });
+  });
+} else {
+  console.error('Customer routes not available');
 }
 
 // Route for checking all registered routes

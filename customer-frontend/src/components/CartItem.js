@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button, InputGroup, Form } from 'react-bootstrap';
 import { useCart } from '../context/CartContext';
+import '../styles/menuCard.css'; // Import the menuCard CSS for consistent styling
 
 const CartItem = ({ item }) => {
   const { updateQuantity, removeFromCart } = useCart();
@@ -16,40 +17,44 @@ const CartItem = ({ item }) => {
         <img
           src={item.image}
           alt={item.name}
-          style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+          style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }}
           className="me-3"
         />
         <div className="flex-grow-1">
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>₹{item.price}</Card.Text>
         </div>
-        <InputGroup style={{ width: '150px' }}>
+        
+        <div className="quantity-controls d-flex align-items-center me-3">
           <Button
-            variant="outline-secondary"
+            variant="outline-primary"
+            className="btn-quantity"
             onClick={() => updateQuantity(item._id, item.quantity - 1)}
           >
             -
           </Button>
           <Form.Control
-            type="number"
             value={item.quantity}
             onChange={handleQuantityChange}
+            className="text-center quantity-display"
             min="1"
-            className="text-center"
           />
           <Button
-            variant="outline-secondary"
+            variant="outline-primary"
+            className="btn-quantity"
             onClick={() => updateQuantity(item._id, item.quantity + 1)}
           >
             +
           </Button>
-        </InputGroup>
+        </div>
+        
         <Button
-          variant="danger"
-          className="ms-3"
+          variant="outline-danger"
+          className="rounded-circle p-2"
+          style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => removeFromCart(item._id)}
         >
-          <i className="fas fa-trash"></i>
+          ✕
         </Button>
       </Card.Body>
     </Card>

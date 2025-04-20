@@ -3,6 +3,7 @@ import { Container, Table, Badge, Button, Form, Row, Col, Card, Alert } from 're
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { orderService } from '../services/api';
+import BackButton from '../components/BackButton';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -126,6 +127,7 @@ const Orders = () => {
 
   return (
     <Container className="py-4">
+      <BackButton />
       <h1 className="mb-4">Orders</h1>
       
       {error && <Alert variant="danger">{error}</Alert>}

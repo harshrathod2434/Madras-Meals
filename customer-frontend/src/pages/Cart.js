@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import CartItem from '../components/CartItem';
 
 const Cart = () => {
-  const { cart, clearCart, total } = useCart();
+  const { cart, clearCart, getTotalPrice } = useCart();
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -86,9 +86,29 @@ const Cart = () => {
   if (cart.length === 0) {
     return (
       <Container className="py-5 text-center">
-        <h2>Your cart is empty</h2>
-        <p>Browse our menu to add some delicious items!</p>
-        <Button variant="primary" onClick={() => navigate('/menu')}>
+        <div className="text-center">
+          <h2 className="fw-bold" style={{ 
+            borderBottom: '3px solid var(--dark-green-highlight)',
+            paddingBottom: '10px',
+            display: 'inline-block'
+          }}>
+            Your Cart
+          </h2>
+          <p className="text-white">Your cart is currently empty</p>
+        </div>
+        <p className="mt-4 text-white">Browse our menu to add some delicious items!</p>
+        <Button 
+          variant="primary" 
+          onClick={() => navigate('/menu')}
+          size="lg"
+          className="px-4 py-2 mt-3"
+          style={{
+            borderRadius: '30px',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            backgroundColor: 'var(--dark-green-highlight)',
+            borderColor: 'var(--dark-green-highlight)'
+          }}
+        >
           View Menu
         </Button>
       </Container>
@@ -97,7 +117,17 @@ const Cart = () => {
 
   return (
     <Container className="py-5">
-      <h2 className="mb-4">Your Cart</h2>
+      <div className="text-center mb-4">
+        <h2 className="fw-bold" style={{ 
+          borderBottom: '3px solid var(--dark-green-highlight)',
+          paddingBottom: '10px',
+          display: 'inline-block'
+        }}>
+          Your Cart
+        </h2>
+        <p className="text-white">Review your order before checkout</p>
+      </div>
+      
       {error && <Alert variant="danger">{error}</Alert>}
       
       <Row>
@@ -108,11 +138,11 @@ const Cart = () => {
         </Col>
         
         <Col md={4}>
-          <div className="border rounded p-3">
-            <h4 className="mb-3">Order Summary</h4>
+          <div className="border rounded p-3" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <h4 className="mb-3 fw-bold">Order Summary</h4>
             <p className="d-flex justify-content-between">
               <span>Total:</span>
-              <strong>₹{total}</strong>
+              <strong>₹{getTotalPrice()}</strong>
             </p>
 
             {user && (
@@ -160,7 +190,8 @@ const Cart = () => {
               variant="primary"
               onClick={handleCheckout}
               disabled={loading}
-              className="w-100"
+              className="w-100 py-2 fw-bold"
+              style={{ borderRadius: '6px' }}
             >
               {loading ? 'Processing...' : 'Checkout'}
             </Button>

@@ -3,6 +3,7 @@ import { Container, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { menuService } from '../services/api';
+import BackButton from '../components/BackButton';
 
 const DeleteMenuItem = () => {
   const [menuItem, setMenuItem] = useState(null);
@@ -53,6 +54,7 @@ const DeleteMenuItem = () => {
 
   return (
     <Container className="py-4" style={{ maxWidth: '600px' }}>
+      <BackButton to="/menu" label="Back to Menu" />
       <h1 className="mb-4">Delete Menu Item</h1>
       
       {error && <Alert variant="danger">{error}</Alert>}

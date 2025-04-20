@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Orders from './pages/Orders';
@@ -8,10 +8,12 @@ import AddMenuItem from './pages/AddMenuItem';
 import EditMenuItem from './pages/EditMenuItem';
 import DeleteMenuItem from './pages/DeleteMenuItem';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import AdminManagement from './pages/AdminManagement';
+import CustomerManagement from './pages/CustomerManagement';
 import ComingSoon from './pages/ComingSoon';
 
 // PrivateRoute component to protect routes
@@ -36,48 +38,64 @@ const PublicRoute = ({ element }) => {
   return isAuthenticated ? <Navigate to="/dashboard" /> : element;
 };
 
-const AppRoutes = () => {
+// Layout component with navbar and footer for authenticated routes
+const Layout = () => {
   const { isAuthenticated } = useAuth();
   
   return (
     <div className="admin-app d-flex flex-column min-vh-100">
       {isAuthenticated && <Navbar />}
       <main className="flex-grow-1">
-        <Routes>
-          <Route path="/login" element={<PublicRoute element={<Login />} />} />
-          <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
-          
-          {/* Menu Routes */}
-          <Route path="/menu" element={<PrivateRoute element={<MenuPage />} />} />
-          <Route path="/menu/add" element={<PrivateRoute element={<AddMenuItem />} />} />
-          <Route path="/menu/edit/:id" element={<PrivateRoute element={<EditMenuItem />} />} />
-          <Route path="/menu/delete/:id" element={<PrivateRoute element={<DeleteMenuItem />} />} />
-          
-          {/* Order Routes */}
-          <Route path="/orders" element={<PrivateRoute element={<Orders />} />} />
-          
-          {/* Admin Management */}
-          <Route path="/admin-access" element={<PrivateRoute element={<AdminManagement />} />} />
-          
-          {/* Placeholder Routes for features coming soon */}
-          <Route path="/customers" element={<PrivateRoute element={<ComingSoon feature="Customer Profiles" />} />} />
-          <Route path="/analytics" element={<PrivateRoute element={<ComingSoon feature="Analytics & Reports" />} />} />
-          
-          <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
-        </Routes>
+        <Outlet />
       </main>
+      {/* Global Footer - shown on all pages */}
+      <Footer />
     </div>
   );
 };
 
 function App() {
+  const { isAuthenticated } = useAuth();
+  
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/login" element={<PublicRoute element={<Login />} />} />
+        <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} />} />
+        
+        {/* Menu Routes */}
+        <Route path="/menu" element={<PrivateRoute element={<MenuPage />} />} />
+        <Route path="/menu/add" element={<PrivateRoute element={<AddMenuItem />} />} />
+        <Route path="/menu/edit/:id" element={<PrivateRoute element={<EditMenuItem />} />} />
+        <Route path="/menu/delete/:id" element={<PrivateRoute element={<DeleteMenuItem />} />} />
+        
+        {/* Order Routes */}
+        <Route path="/orders" element={<PrivateRoute element={<Orders />} />} />
+        
+        {/* Admin Management */}
+        <Route path="/admin-access" element={<PrivateRoute element={<AdminManagement />} />} />
+        
+        {/* Customer Management */}
+        <Route path="/customers" element={<PrivateRoute element={<CustomerManagement />} />} />
+        
+        {/* Placeholder Routes for features coming soon */}
+        <Route path="/analytics" element={<PrivateRoute element={<ComingSoon feature="Analytics & Reports" />} />} />
+        
+        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
+      </Route>
+    </Routes>
+  );
+}
+
+// Main wrapped with Router and AuthProvider
+function AppWrapper() {
   return (
     <Router>
       <AuthProvider>
-        <AppRoutes />
+        <App />
       </AuthProvider>
     </Router>
   );
 }
 
-export default App; 
+export default AppWrapper; 

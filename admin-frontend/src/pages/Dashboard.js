@@ -59,7 +59,7 @@ const Dashboard = () => {
       icon: 'bi-person-lines-fill',
       color: '#36b9cc',
       link: '/customers',
-      onClick: () => alert('Customer Profiles - This feature is coming soon!')
+      onClick: () => navigate('/customers')
     },
     {
       id: 6,
@@ -68,7 +68,7 @@ const Dashboard = () => {
       icon: 'bi-bar-chart-line',
       color: '#6f42c1',
       link: '/analytics',
-      onClick: () => alert('Analytics & Reports - This feature is coming soon!')
+      onClick: () => navigate('/analytics')
     }
   ];
 
@@ -77,43 +77,34 @@ const Dashboard = () => {
   }
 
   return (
-    <>
-      <Container className="py-4">
-        {/* Welcome Message */}
-        <div className="welcome-section text-center mb-4">
-          <h1 className="display-4">Welcome, {user.name}</h1>
-          <p className="lead text-muted">Manage your restaurant operations efficiently</p>
-        </div>
+    <Container className="py-4">
+      {/* Welcome Message */}
+      <div className="welcome-section text-center mb-4">
+        <h1 className="display-4">Welcome, {user.name}</h1>
+        <p className="lead text-muted">Manage your restaurant operations efficiently</p>
+      </div>
 
-        {/* Dashboard Cards Grid */}
-        <Row className="g-4">
-          {dashboardCards.map(card => (
-            <Col key={card.id} md={6} lg={4}>
-              <Card 
-                className="dashboard-card h-100 shadow-sm" 
-                onClick={card.onClick} 
-                style={{ cursor: 'pointer' }}
-              >
-                <Card.Body className="text-center">
-                  <div className="icon-circle" style={{ backgroundColor: card.color }}>
-                    <i className={`bi ${card.icon} fs-4`}></i>
-                  </div>
-                  <Card.Title className="mt-3 mb-2 fw-bold">{card.title}</Card.Title>
-                  <Card.Text className="text-muted">{card.description}</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-      
-      {/* Footer */}
-      <footer className="footer mt-auto py-3 bg-light">
-        <Container className="text-center">
-          <span className="text-muted">© 2024 Madras Meals. All rights reserved.</span>
-        </Container>
-      </footer>
-    </>
+      {/* Dashboard Cards Grid */}
+      <Row className="g-4">
+        {dashboardCards.map(card => (
+          <Col key={card.id} md={6} lg={4}>
+            <Card 
+              className="dashboard-card h-100 shadow-sm" 
+              onClick={card.onClick} 
+              style={{ cursor: 'pointer' }}
+            >
+              <Card.Body className="text-center">
+                <div className="icon-circle" style={{ backgroundColor: card.color }}>
+                  <i className={`bi ${card.icon} fs-4`}></i>
+                </div>
+                <Card.Title className="mt-3 mb-2 fw-bold">{card.title}</Card.Title>
+                <Card.Text className="text-muted">{card.description}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 };
 

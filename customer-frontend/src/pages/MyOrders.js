@@ -53,7 +53,16 @@ const MyOrders = () => {
   if (loading) {
     return (
       <Container className="py-5">
-        <h2>Loading orders...</h2>
+        <div className="text-center">
+          <h2 className="fw-bold" style={{ 
+            borderBottom: '3px solid var(--dark-green-highlight)',
+            paddingBottom: '10px',
+            display: 'inline-block'
+          }}>
+            My Orders
+          </h2>
+          <p className="text-white">Loading your order history...</p>
+        </div>
       </Container>
     );
   }
@@ -61,6 +70,15 @@ const MyOrders = () => {
   if (error) {
     return (
       <Container className="py-5">
+        <div className="text-center mb-4">
+          <h2 className="fw-bold" style={{ 
+            borderBottom: '3px solid var(--dark-green-highlight)',
+            paddingBottom: '10px',
+            display: 'inline-block'
+          }}>
+            My Orders
+          </h2>
+        </div>
         <Alert variant="danger">{error}</Alert>
       </Container>
     );
@@ -69,57 +87,85 @@ const MyOrders = () => {
   if (orders.length === 0) {
     return (
       <Container className="py-5">
-        <h2>No orders yet</h2>
-        <p>Your order history will appear here</p>
+        <div className="text-center">
+          <h2 className="fw-bold" style={{ 
+            borderBottom: '3px solid var(--dark-green-highlight)',
+            paddingBottom: '10px',
+            display: 'inline-block'
+          }}>
+            My Orders
+          </h2>
+          <p className="text-white">You haven't placed any orders yet</p>
+          <p className="mt-3 text-white">Your order history will appear here once you place an order</p>
+        </div>
       </Container>
     );
   }
 
   return (
     <Container className="py-5">
-      <h2 className="mb-4">My Orders</h2>
-      {orders.map(order => (
-        <Card key={order._id} className="mb-4">
-          <Card.Header className="d-flex justify-content-between align-items-center">
-            <span>Order #{order._id.slice(-6)}</span>
-            <Badge bg={getStatusBadgeVariant(order.status)}>
-              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-            </Badge>
-          </Card.Header>
-          <Card.Body>
-            <Row>
-              <Col md={8}>
-                <h5 className="mb-3">Items:</h5>
-                {order.items.map(item => (
-                  <div key={item._id} className="d-flex justify-content-between mb-2">
-                    <span>
-                      {item.quantity}x {item.menuItem.name}
-                    </span>
-                    <span>₹{item.price * item.quantity}</span>
+      <div className="text-center mb-4">
+        <h2 className="fw-bold" style={{ 
+          borderBottom: '3px solid var(--dark-green-highlight)',
+          paddingBottom: '10px',
+          display: 'inline-block'
+        }}>
+          My Orders
+        </h2>
+        <p className="text-white">Your order history and status updates</p>
+      </div>
+      
+      <div style={{
+        border: `1px solid var(--dark-green-border)`,
+        borderRadius: '12px',
+        padding: '30px',
+        marginBottom: '30px',
+        backgroundColor: 'var(--dark-green-card)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+      }}>
+        {orders.map(order => (
+          <Card key={order._id} className="mb-4 border shadow-sm" style={{ backgroundColor: 'var(--dark-green-secondary)', color: 'white' }}>
+            <Card.Header className="d-flex justify-content-between align-items-center py-3" style={{ backgroundColor: 'var(--dark-green-accent)', borderBottom: `1px solid var(--dark-green-border)` }}>
+              <span className="fw-bold text-white">Order #{order._id.slice(-6)}</span>
+              <Badge bg={getStatusBadgeVariant(order.status)} className="py-2 px-3">
+                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+              </Badge>
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Col md={8}>
+                  <h5 className="mb-3 fw-bold text-white">Items:</h5>
+                  {order.items.map(item => (
+                    <div key={item._id} className="d-flex justify-content-between mb-2">
+                      <span className="text-white">
+                        {item.quantity}x {item.menuItem ? item.menuItem.name : 'Unknown Item'}
+                      </span>
+                      <span className="text-white">₹{item.price * item.quantity}</span>
+                    </div>
+                  ))}
+                  <div className="border-top pt-2 mt-2" style={{ borderColor: 'var(--dark-green-border)' }}>
+                    <strong className="text-white">Total: ₹{order.totalAmount}</strong>
                   </div>
-                ))}
-                <div className="border-top pt-2 mt-2">
-                  <strong>Total: ₹{order.totalAmount}</strong>
-                </div>
-              </Col>
-              <Col md={4}>
-                <h5 className="mb-3">Delivery Details:</h5>
-                <p className="mb-2">
-                  <strong>Address:</strong><br />
-                  {order.deliveryAddress}
-                </p>
-                <p className="mb-0">
-                  <strong>Phone:</strong><br />
-                  {order.phoneNumber}
-                </p>
-              </Col>
-            </Row>
-            <div className="text-muted mt-3">
-              <small>Ordered on: {new Date(order.createdAt).toLocaleString()}</small>
-            </div>
-          </Card.Body>
-        </Card>
-      ))}
+                </Col>
+                <Col md={4}>
+                  <h5 className="mb-3 fw-bold text-white">Delivery Details:</h5>
+                  <p className="mb-2 text-white">
+                    <strong>Address:</strong><br />
+                    {order.deliveryAddress}
+                  </p>
+                  <p className="mb-0 text-white">
+                    <strong>Phone:</strong><br />
+                    {order.phoneNumber}
+                  </p>
+                </Col>
+              </Row>
+              <div className="mt-3 text-white opacity-75">
+                <small>Ordered on: {new Date(order.createdAt).toLocaleString()}</small>
+              </div>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
     </Container>
   );
 };

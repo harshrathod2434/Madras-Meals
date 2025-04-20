@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table, Button, Spinner, Alert, Modal, Form, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { menuService } from '../services/api';
+import BackButton from '../components/BackButton';
 
 const MenuPage = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -9,6 +10,11 @@ const MenuPage = () => {
   const [error, setError] = useState(null);
   const [modalError, setModalError] = useState(null);
   const navigate = useNavigate();
+  
+  // Selected items state for bulk actions
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingMultiple, setDeletingMultiple] = useState(false);
   
   // Modal state
   const [showEditModal, setShowEditModal] = useState(false);
@@ -160,13 +166,71 @@ const MenuPage = () => {
     }
   };
 
+  // Handle checkbox selection
+  const handleSelectItem = (itemId) => {
+    setSelectedItems(prev => {
+      if (prev.includes(itemId)) {
+        return prev.filter(id => id !== itemId);
+      } else {
+        return [...prev, itemId];
+      }
+    });
+  };
+
+  // Handle select all checkbox
+  const handleSelectAll = () => {
+    if (selectedItems.length === menuItems.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(menuItems.map(item => item._id));
+    }
+  };
+
+  // Delete multiple items
+  const handleDeleteSelected = () => {
+    if (selectedItems.length > 0) {
+      setShowDeleteModal(true);
+    }
+  };
+
+  // Confirm and execute multiple delete
+  const confirmDeleteMultiple = async () => {
+    try {
+      setDeletingMultiple(true);
+      await menuService.deleteMultipleMenuItems(selectedItems);
+      
+      // Refresh menu items and reset selection
+      await fetchMenuItems();
+      setSelectedItems([]);
+      setShowDeleteModal(false);
+      setError(null);
+    } catch (err) {
+      console.error('Error deleting multiple menu items:', err);
+      setError('Failed to delete selected items. Please try again.');
+    } finally {
+      setDeletingMultiple(false);
+    }
+  };
+
   return (
     <Container className="py-4">
+      <BackButton />
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Menu Items</h1>
-        <Button variant="success" onClick={handleAddNew}>
-          <i className="bi bi-plus-circle me-1"></i> Add New Item
-        </Button>
+        <div>
+          {selectedItems.length > 0 && (
+            <Button 
+              variant="danger" 
+              className="me-2"
+              onClick={handleDeleteSelected}
+            >
+              <i className="bi bi-trash me-1"></i> Delete Selected ({selectedItems.length})
+            </Button>
+          )}
+          <Button variant="success" onClick={handleAddNew}>
+            <i className="bi bi-plus-circle me-1"></i> Add New Item
+          </Button>
+        </div>
       </div>
 
       {error && <Alert variant="danger">{error}</Alert>}
@@ -193,6 +257,13 @@ const MenuPage = () => {
             <Table responsive hover>
               <thead>
                 <tr>
+                  <th>
+                    <Form.Check
+                      type="checkbox"
+                      onChange={handleSelectAll}
+                      checked={selectedItems.length === menuItems.length && menuItems.length > 0}
+                    />
+                  </th>
                   <th>Name</th>
                   <th>Description</th>
                   <th>Price</th>
@@ -202,6 +273,13 @@ const MenuPage = () => {
               <tbody>
                 {menuItems.map((item) => (
                   <tr key={item._id}>
+                    <td>
+                      <Form.Check
+                        type="checkbox"
+                        checked={selectedItems.includes(item._id)}
+                        onChange={() => handleSelectItem(item._id)}
+                      />
+                    </td>
                     <td>
                       <div className="d-flex align-items-center">
                         {item.image && (
@@ -333,6 +411,37 @@ const MenuPage = () => {
             </Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Multiple Items</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete {selectedItems.length} menu items?</p>
+          <Alert variant="warning">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            This action cannot be undone.
+          </Alert>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={confirmDeleteMultiple}
+            disabled={deletingMultiple}
+          >
+            {deletingMultiple ? (
+              <>
+                <Spinner size="sm" animation="border" className="me-1" /> 
+                Deleting...
+              </>
+            ) : 'Delete Items'}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Container>
   );

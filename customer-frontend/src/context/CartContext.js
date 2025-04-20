@@ -6,6 +6,8 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const [notificationItem, setNotificationItem] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
@@ -30,6 +32,10 @@ export const CartProvider = ({ children }) => {
       }
       return [...prevCart, { ...item, quantity: 1 }];
     });
+
+    // Show notification
+    setNotificationItem(item);
+    setShowNotification(true);
   };
 
   const removeFromCart = (itemId) => {
@@ -60,6 +66,10 @@ export const CartProvider = ({ children }) => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
+  const hideNotification = () => {
+    setShowNotification(false);
+  };
+
   const value = {
     cart,
     addToCart,
@@ -67,7 +77,10 @@ export const CartProvider = ({ children }) => {
     updateQuantity,
     clearCart,
     getTotalItems,
-    getTotalPrice
+    getTotalPrice,
+    notificationItem,
+    showNotification,
+    hideNotification
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

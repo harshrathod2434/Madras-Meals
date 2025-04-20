@@ -1,0 +1,44 @@
+.cart-badge {
+  top: -5px;
+  right: -5px;
+  font-size: 0.65rem;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* Spacer to prevent content from being hidden behind the fixed navbar */
+.navbar-spacer {
+  height: 60px; /* Adjust to match your navbar height */
+}
+
+@media (max-width: 992px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+  
+  .navbar .container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .navbar-spacer {
+    height: 56px; /* Slightly smaller for mobile */
+  }
+}
+
+/* Make the menu and cart icons more prominent on mobile */
+@media (max-width: 576px) {
+  .navbar .bi-book-fill,
+  .navbar .bi-cart-fill {
+    font-size: 1.3rem;
+  }
+  
+  .cart-badge {
+    top: -8px;
+    right: -8px;
+  }
+} 

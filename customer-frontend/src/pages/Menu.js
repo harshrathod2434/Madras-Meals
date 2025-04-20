@@ -37,21 +37,32 @@ const Menu = () => {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4">Our Menu</h1>
+      <div className="text-center mb-4">
+        <h2 className="display-4 fw-bold" style={{ 
+          color: 'white', 
+          borderBottom: '3px solid var(--dark-green-highlight)',
+          paddingBottom: '10px',
+          display: 'inline-block'
+        }}>
+          Our Menu
+        </h2>
+        <p className="text-white">Explore our delicious South Indian delicacies</p>
+      </div>
       
-      <div className="d-flex justify-content-between mb-4">
+      <div className="d-flex flex-column flex-md-row justify-content-between mb-4">
         <Form.Control
           type="search"
           placeholder="Search menu items..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '300px' }}
+          className="mb-3 mb-md-0"
+          style={{ maxWidth: '300px' }}
         />
         
         <Form.Select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          style={{ width: '200px' }}
+          style={{ maxWidth: '200px' }}
         >
           <option value="name">Sort by Name</option>
           <option value="price">Sort by Price</option>

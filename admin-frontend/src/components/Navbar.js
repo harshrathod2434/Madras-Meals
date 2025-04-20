@@ -1,58 +1,64 @@
 import React from 'react';
 import { Navbar as BootstrapNavbar, Nav, Container, Button } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    window.location.href = '/login';
+  };
+
+  // Custom styles for navbar elements
+  const navbarStyle = {
+    padding: '1rem 2rem', // Increased vertical padding and horizontal padding
+  };
+
+  const brandStyle = {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    transition: 'color 0.3s ease',
+  };
+
+  const brandHoverStyle = {
+    color: '#ffc107', // Yellow color on hover (Bootstrap warning color)
   };
 
   return (
-    <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="mb-4">
-      <Container>
-        <BootstrapNavbar.Brand as={Link} to="/dashboard">
+    <BootstrapNavbar bg="dark" variant="dark" className="mb-4" style={navbarStyle}>
+      <Container fluid className="px-4"> {/* Added horizontal padding */}
+        <BootstrapNavbar.Brand 
+          as={Link} 
+          to="/dashboard" 
+          className="me-auto"
+          style={brandStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = brandHoverStyle.color;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '';
+          }}
+        >
           Madras Meals - Admin Panel
         </BootstrapNavbar.Brand>
         
-        <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
-        
-        <BootstrapNavbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/dashboard">
-              Dashboard
-            </Nav.Link>
-            <Nav.Link as={Link} to="/menu">
-              Menu
-            </Nav.Link>
-            <Nav.Link as={Link} to="/orders">
-              Orders
-            </Nav.Link>
-            <Nav.Link as={Link} to="/menu/add">
-              Add Menu Item
-            </Nav.Link>
-          </Nav>
-          
-          <Nav>
-            {user && (
-              <>
-                <span className="navbar-text me-3 text-light d-flex align-items-center">
-                  Hi, {user.name}
-                </span>
-                <Button
-                  variant="outline-light"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
-              </>
-            )}
-          </Nav>
-        </BootstrapNavbar.Collapse>
+        <Nav>
+          {user && (
+            <div className="d-flex align-items-center">
+              <span className="navbar-text me-3 text-light">
+                Hi, {user.name}
+              </span>
+              <Button
+                variant="outline-light"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
+          )}
+        </Nav>
       </Container>
     </BootstrapNavbar>
   );

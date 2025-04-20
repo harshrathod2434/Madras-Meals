@@ -3,6 +3,7 @@ import { Container, Table, Button, Modal, Form, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { adminService } from '../services/api';
+import BackButton from '../components/BackButton';
 
 const AdminManagement = () => {
   const [admins, setAdmins] = useState([]);
@@ -194,6 +195,7 @@ const AdminManagement = () => {
   
   return (
     <Container className="py-4">
+      <BackButton />
       <h1 className="mb-4">Admin Management</h1>
       
       {error && <Alert variant="danger">{error}</Alert>}

@@ -1,0 +1,284 @@
+/* Add these at the top of the file */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Make sure no element exceeds viewport width */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure full-width elements can break out of containers */
+.full-width {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  max-width: 100vw;
+}
+
+/* Carousel wrapper to prevent layout shift */
+.carousel-wrapper {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Banner carousel styles for edge-to-edge display */
+.banner-carousel {
+  margin-bottom: 20px;
+}
+
+.banner-carousel .carousel-inner img {
+  width: 100%;
+}
+
+.banner-carousel .carousel-control-prev,
+.banner-carousel .carousel-control-next {
+  width: 5%;
+  opacity: 0.8;
+}
+
+.banner-carousel .carousel-indicators {
+  bottom: 20px;
+}
+
+/* Make sure carousel is visible at mobile sizes */
+@media (max-width: 768px) {
+  .banner-carousel .carousel-item {
+    touch-action: pan-y;
+  }
+}
+
+/* Dark Green Theme Variables */
+:root {
+  --dark-green-primary: #1a3a2a;
+  --dark-green-secondary: #234631;
+  --dark-green-accent: #2c5e3f;
+  --dark-green-light: #3b7553;
+  --dark-green-highlight: #4caf50;
+  --dark-green-text: #ffffff;
+  --dark-green-muted: #ffffff;
+  --dark-green-border: #2c5e3f;
+  --dark-green-hover: #4caf50;
+  --dark-green-card: #32664a; /* Lighter shade for menu cards */
+}
+
+/* Global styles */
+body {
+  background-color: var(--dark-green-primary);
+  color: var(--dark-green-text);
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--dark-green-secondary) !important;
+  border-bottom: 1px solid var(--dark-green-border);
+}
+
+.navbar-dark .navbar-brand {
+  color: var(--dark-green-text) !important;
+}
+
+.navbar-dark .navbar-brand:hover {
+  color: var(--dark-green-highlight) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--dark-green-text);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: var(--dark-green-highlight) !important;
+}
+
+/* Badge for cart */
+.badge.bg-primary {
+  background-color: var(--dark-green-highlight) !important;
+}
+
+/* Cards */
+.card {
+  background-color: var(--dark-green-secondary);
+  border-color: var(--dark-green-border);
+  color: var(--dark-green-text);
+}
+
+.card-title {
+  color: var(--dark-green-text);
+}
+
+.card-text {
+  color: var(--dark-green-text);
+}
+
+/* Menu Cards */
+.menu-card {
+  background-color: var(--dark-green-secondary);
+  border-color: var(--dark-green-border);
+}
+
+.menu-card:hover {
+  border-color: var(--dark-green-highlight);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-card .btn-add {
+  background-color: var(--dark-green-accent);
+  border-color: var(--dark-green-accent);
+}
+
+.menu-card .btn-add:hover {
+  background-color: var(--dark-green-highlight);
+  border-color: var(--dark-green-highlight);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--dark-green-accent);
+  border-color: var(--dark-green-accent);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--dark-green-light);
+  border-color: var(--dark-green-light);
+}
+
+.btn-success {
+  background-color: var(--dark-green-highlight);
+  border-color: var(--dark-green-highlight);
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: var(--dark-green-light);
+  border-color: var(--dark-green-light);
+}
+
+/* Tables */
+.table {
+  color: var(--dark-green-text);
+}
+
+.table thead th {
+  background-color: var(--dark-green-secondary);
+  border-color: var(--dark-green-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(44, 94, 63, 0.1);
+}
+
+.table td, .table th {
+  border-color: var(--dark-green-border);
+}
+
+/* Forms */
+.form-control, .form-select {
+  background-color: var(--dark-green-secondary);
+  border-color: var(--dark-green-border);
+  color: var(--dark-green-text);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--dark-green-secondary);
+  border-color: var(--dark-green-highlight);
+  color: var(--dark-green-text);
+  box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+}
+
+/* Footer */
+footer {
+  background-color: var(--dark-green-secondary) !important;
+  color: var(--dark-green-text);
+  border-top: 1px solid var(--dark-green-border);
+}
+
+footer a {
+  color: var(--dark-green-text);
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: var(--dark-green-highlight);
+  text-decoration: underline;
+}
+
+/* Floating Cart Notification */
+.floating-notification {
+  background-color: var(--dark-green-secondary);
+  border: 1px solid var(--dark-green-border);
+  color: var(--dark-green-text);
+}
+
+/* Modal windows */
+.modal-content {
+  background-color: var(--dark-green-secondary);
+  border-color: var(--dark-green-border);
+  color: var(--dark-green-text);
+}
+
+.modal-header {
+  border-bottom-color: var(--dark-green-border);
+}
+
+.modal-footer {
+  border-top-color: var(--dark-green-border);
+}
+
+/* Additional text color overrides */
+.text-muted {
+  color: white !important;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, div {
+  color: white;
+}
+
+/* Additional form styles for white text */
+input, 
+select, 
+textarea, 
+.form-label, 
+.form-text {
+  color: white !important;
+}
+
+input::placeholder, 
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Additional styles to ensure all text is white */
+.text-dark, 
+.text-body,
+.text-black {
+  color: white !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-green-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--dark-green-accent);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--dark-green-light);
+}
