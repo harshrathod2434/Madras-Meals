@@ -89,11 +89,11 @@ const Home = () => {
     <>
       {/* Full Width Carousel Banner */}
       <Carousel 
-        className="banner-carousel" 
+        className="banner-carousel mt-4" 
         touch={true} 
         indicators={true} 
-        interval={5000}
-        controls={true}
+        interval={5000} 
+        controls={true} 
       >
         {getCarouselItems()}
       </Carousel>

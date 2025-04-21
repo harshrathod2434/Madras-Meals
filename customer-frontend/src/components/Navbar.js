@@ -19,16 +19,15 @@ const Navbar = () => {
 
   return (
     <>
-      <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="py-2" fixed="top">
+      <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="py-4" fixed="top">
         <Container>
           <BootstrapNavbar.Brand as={Link} to="/" className="d-flex align-items-center">
             <Image 
-              src="https://res.cloudinary.com/dyzvzef89/image/upload/v1745157332/logo_qz1szy.svg" 
+              src="https://res.cloudinary.com/dyzvzef89/image/upload/v1745269277/MADRAS_MEALS_LOGO2_mjwaz3.png"
               alt="Madras Meals Logo" 
-              height="30" 
+              height="40" 
               className="me-2" 
             />
-            Madras Meals
           </BootstrapNavbar.Brand>
           
           {/* Always visible on mobile */}

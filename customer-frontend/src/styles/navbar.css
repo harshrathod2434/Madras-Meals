@@ -12,7 +12,8 @@
 
 /* Spacer to prevent content from being hidden behind the fixed navbar */
 .navbar-spacer {
-  height: 60px; /* Adjust to match your navbar height */
+  height: 80px; /* Ensure this matches the navbar height */
+  width: 100%;
 }
 
 @media (max-width: 992px) {
@@ -40,5 +41,18 @@
   .cart-badge {
     top: -8px;
     right: -8px;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-nav .nav-link {
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-brand img {
+    height: 33px;
   }
 } 
