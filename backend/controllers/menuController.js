@@ -7,8 +7,6 @@ const csv = require('csv-parser');
 const getAllMenuItems = async (req, res) => {
   let client;
   try {
-    console.log('Attempting to fetch menu items...');
-    
     // Create a new MongoDB client
     client = new MongoClient(process.env.MONGODB_URI, {
       useNewUrlParser: true,
@@ -17,7 +15,6 @@ const getAllMenuItems = async (req, res) => {
 
     // Connect to MongoDB
     await client.connect();
-    console.log('Connected to MongoDB in controller');
 
     // Get the collection
     const db = client.db('MadrasMeals');
@@ -26,7 +23,6 @@ const getAllMenuItems = async (req, res) => {
     // Fetch documents
     const menuItems = await collection.find({}).toArray();
     
-    console.log('Menu items fetched:', menuItems);
     res.json(menuItems);
   } catch (error) {
     console.error('Error in getAllMenuItems:', error);
@@ -34,7 +30,6 @@ const getAllMenuItems = async (req, res) => {
   } finally {
     if (client) {
       await client.close();
-      console.log('MongoDB connection closed');
     }
   }
 };
@@ -53,8 +48,6 @@ const getMenuItem = async (req, res) => {
 
 const createMenuItem = async (req, res) => {
   try {
-    console.log('Creating menu item with data:', req.body);
-    
     // Create menu item data from body fields
     const menuItemData = {
       name: req.body.name,
@@ -66,17 +59,13 @@ const createMenuItem = async (req, res) => {
     
     // If there's a file uploaded, add the image URL
     if (req.file) {
-      console.log('Image uploaded:', req.file);
       menuItemData.image = req.file.path;
     }
-    
-    console.log('Final menu item data:', menuItemData);
     
     // Create and save the menu item
     const menuItem = new MenuItem(menuItemData);
     await menuItem.save();
     
-    console.log('Menu item created:', menuItem);
     res.status(201).json(menuItem);
   } catch (error) {
     console.error('Error creating menu item:', error);
@@ -86,51 +75,37 @@ const createMenuItem = async (req, res) => {
 
 const updateMenuItem = async (req, res) => {
   try {
-    console.log('Updating menu item with ID:', req.params.id);
-    console.log('Update data:', req.body);
-    console.log('File:', req.file);
-    
     // Create an update object with the form fields
     const updateData = {};
     
     // Add text fields if they exist
     if (req.body.name) {
       updateData.name = req.body.name;
-      console.log('Setting name to:', req.body.name);
     }
     
     if (req.body.description) {
       updateData.description = req.body.description;
-      console.log('Setting description to:', req.body.description);
     }
     
     if (req.body.price) {
       updateData.price = Number(req.body.price);
-      console.log('Setting price to:', Number(req.body.price));
     }
     
     if (req.body.category) {
       updateData.category = req.body.category;
-      console.log('Setting category to:', req.body.category);
     }
     
     if (req.body.isAvailable !== undefined) {
       updateData.isAvailable = req.body.isAvailable === 'true' || req.body.isAvailable === true;
-      console.log('Setting isAvailable to:', updateData.isAvailable);
     }
     
     // If there's a file uploaded, add the image URL
     if (req.file) {
-      console.log('New image uploaded:', req.file);
       updateData.image = req.file.path;
-      console.log('Setting image to:', req.file.path);
     }
-    
-    console.log('Final update data:', updateData);
     
     // Check if we actually have data to update
     if (Object.keys(updateData).length === 0) {
-      console.log('No update data provided');
       return res.status(400).json({ error: 'No update data provided' });
     }
     
@@ -145,7 +120,6 @@ const updateMenuItem = async (req, res) => {
       return res.status(404).json({ error: 'Menu item not found' });
     }
     
-    console.log('Menu item updated successfully:', menuItem);
     res.json(menuItem);
   } catch (error) {
     console.error('Error updating menu item:', error);
@@ -175,8 +149,6 @@ const deleteMultipleMenuItems = async (req, res) => {
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ error: 'Valid array of item IDs is required' });
     }
-    
-    console.log(`Attempting to delete ${ids.length} menu items`);
     
     // Convert string IDs to ObjectIds and handle validation
     const validIds = [];
@@ -228,13 +200,9 @@ const deleteMultipleMenuItems = async (req, res) => {
  */
 const importMenuItemsFromCSV = async (req, res) => {
   try {
-    console.log('Starting CSV import process');
-    
     if (!req.file) {
       return res.status(400).json({ error: 'CSV file is required' });
     }
-    
-    console.log('CSV file received:', req.file);
     
     const results = [];
     const errors = [];
@@ -305,7 +273,6 @@ const importMenuItemsFromCSV = async (req, res) => {
     }
     
     // Insert all valid items to the database
-    console.log(`Importing ${results.length} menu items...`);
     const insertedItems = await MenuItem.insertMany(results);
     
     res.status(201).json({
@@ -333,8 +300,6 @@ const importMenuItemsFromCSV = async (req, res) => {
  */
 const getCSVTemplate = (req, res) => {
   try {
-    console.log('Generating CSV template file...');
-    
     // Create CSV content with headers and sample rows
     const csvContent = 
       'name,description,price,category,isAvailable,image\r\n' +
@@ -346,8 +311,6 @@ const getCSVTemplate = (req, res) => {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="menu-items-template.csv"');
     res.setHeader('Cache-Control', 'no-cache');
-    
-    console.log('Sending CSV template with content length:', csvContent.length);
     
     // Send the CSV content
     res.send(csvContent);

@@ -41,12 +41,8 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (credentials) => {
     try {
-      console.log('Login attempt with:', credentials);
       const response = await authService.login(credentials);
-      console.log('Login response:', response.data);
-      
       const { token, user } = response.data;
-      
       // Verify user is an admin
       if (user.role !== 'admin') {
         console.error('User is not an admin:', user);
@@ -55,18 +51,13 @@ export const AuthProvider = ({ children }) => {
           error: 'You do not have admin privileges' 
         };
       }
-      
-      console.log('Setting token and user:', token, user);
       localStorage.setItem('adminToken', token);
       setUser(user);
       setIsAuthenticated(true);
-      console.log('isAuthenticated set to:', true);
-      
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
       console.error('Error response:', error.response?.data);
-      
       // Handle different error scenarios
       if (error.response?.status === 401) {
         return { 
@@ -74,7 +65,6 @@ export const AuthProvider = ({ children }) => {
           error: 'Invalid email or password' 
         };
       }
-      
       return { 
         success: false, 
         error: error.response?.data?.error || 'Login failed. Please try again.' 

@@ -35,9 +35,7 @@ const AdminManagement = () => {
   const fetchAdmins = async () => {
     try {
       setLoading(true);
-      console.log('Fetching admin users...');
       const response = await adminService.getAllAdmins();
-      console.log('Admin users received:', response.data);
       setAdmins(response.data);
       setError('');
     } catch (error) {
@@ -105,10 +103,7 @@ const AdminManagement = () => {
       
       const { confirmPassword, ...adminData } = newAdmin;
       
-      console.log('Creating new admin:', adminData.name, adminData.email);
       const response = await adminService.createAdmin(adminData);
-      console.log('Admin created successfully:', response.data);
-      
       setAdmins([...admins, response.data]);
       setSuccessMessage(`Admin user "${response.data.name}" created successfully`);
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -150,10 +145,7 @@ const AdminManagement = () => {
   
   const handleDeleteAdmin = async () => {
     try {
-      console.log('Deleting admin:', adminToDelete._id, adminToDelete.name);
       await adminService.deleteAdmin(adminToDelete._id);
-      console.log('Admin deleted successfully');
-      
       setAdmins(admins.filter(admin => admin._id !== adminToDelete._id));
       setSuccessMessage(`Admin user "${adminToDelete.name}" deleted successfully`);
       setTimeout(() => setSuccessMessage(''), 3000);

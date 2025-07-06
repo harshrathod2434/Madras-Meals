@@ -7,11 +7,9 @@ const getAllCustomers = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for customer management');
     
     // Fetch only users with role 'user' and exclude password field
     const customers = await User.find({ role: 'user' }).select('-password');
-    console.log('Customers fetched:', customers.length);
     
     // Get order count for each customer
     const customersWithOrderCount = await Promise.all(
@@ -28,7 +26,6 @@ const getAllCustomers = async (req, res) => {
       })
     );
     
-    console.log('Enhanced customer data:', customersWithOrderCount);
     res.json(customersWithOrderCount);
   } catch (error) {
     console.error('Error getting customers:', error);
@@ -41,7 +38,6 @@ const getCustomerOrders = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for customer orders');
     
     const { customerId } = req.params;
     
@@ -56,8 +52,6 @@ const getCustomerOrders = async (req, res) => {
       .populate('items.menuItem')
       .sort({ createdAt: -1 });
     
-    console.log(`Fetched ${orders.length} orders for customer:`, customerId);
-    
     res.json(orders);
   } catch (error) {
     console.error('Error getting customer orders:', error);
@@ -70,7 +64,6 @@ const getCustomerStats = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for customer statistics');
     
     // Count total customers
     const totalCustomers = await User.countDocuments({ role: 'user' });

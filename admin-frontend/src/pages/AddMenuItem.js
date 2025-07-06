@@ -132,7 +132,7 @@ const AddMenuItem = () => {
                 required
               />
               <Form.Text className="text-muted">
-                Recommended size: 800x600 pixels
+                Recommended size: 800x600 pixels; File type: JPG 
               </Form.Text>
             </Form.Group>
 

@@ -36,9 +36,7 @@ const MenuPage = () => {
   const fetchMenuItems = async () => {
     try {
       setLoading(true);
-      console.log('Fetching menu items...');
       const response = await menuService.getAllMenuItems();
-      console.log('Menu items received:', response.data);
       setMenuItems(response.data);
       setError(null);
     } catch (err) {
@@ -50,7 +48,6 @@ const MenuPage = () => {
   };
 
   const handleEdit = (item) => {
-    console.log('Edit item:', item);
     setCurrentItem(item);
     setEditForm({
       name: item.name,
@@ -81,7 +78,6 @@ const MenuPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Input changed: ${name} = ${value}`);
     setEditForm({
       ...editForm,
       [name]: value
@@ -91,7 +87,6 @@ const MenuPage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log('Image selected:', file.name, file.type, file.size);
       setSelectedImage(file);
       const reader = new FileReader();
       reader.onload = () => {
@@ -103,60 +98,37 @@ const MenuPage = () => {
 
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted');
-    
     if (!currentItem) {
       console.error('No current item set');
       return;
     }
-
     try {
       setUpdating(true);
       setModalError(null);
-      
       // Create a formData object to send
       const formData = new FormData();
-      
       // Add basic data
       formData.append('name', editForm.name);
       formData.append('description', editForm.description);
       formData.append('price', editForm.price);
-      
       // Add image if selected
       if (selectedImage) {
         formData.append('image', selectedImage);
       }
-      
       // Keep isAvailable state
       if (currentItem.isAvailable !== undefined) {
         formData.append('isAvailable', currentItem.isAvailable.toString());
       }
-      
-      // Log form data for debugging
-      console.log('Current item ID:', currentItem._id);
-      console.log('Form data entries:');
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value instanceof File ? `File: ${value.name}` : value}`);
-      }
-      
       // Update the menu item
-      console.log('Sending update request...');
       const response = await menuService.updateMenuItem(currentItem._id, formData);
-      console.log('Update response:', response);
-      
       // Refresh the menu items list
-      console.log('Refreshing menu items list');
       await fetchMenuItems();
-      
       // Show success message
-      console.log('Update successful');
       setUpdateSuccess(true);
-      
       // Close modal after a delay
       setTimeout(() => {
         handleCloseModal();
       }, 1500);
-      
     } catch (err) {
       console.error('Error updating menu item:', err);
       console.error('Error details:', err.response?.data || err.message);

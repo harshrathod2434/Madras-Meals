@@ -5,7 +5,6 @@ const updateProfile = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for profile update');
 
     const { deliveryAddress, phoneNumber } = req.body;
     
@@ -18,7 +17,6 @@ const updateProfile = async (req, res) => {
     if (phoneNumber) user.phoneNumber = phoneNumber;
 
     await user.save();
-    console.log('Profile updated successfully for user:', user._id);
     
     res.json({
       user: {

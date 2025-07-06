@@ -52,22 +52,17 @@ const CSVImport = ({ onImportSuccess }) => {
 
     try {
       const response = await menuService.importMenuItemsFromCSV(csvFile);
-      console.log('Import response:', response);
-      
       const importCount = response.data.items.length;
       setSuccess(`Successfully imported ${importCount} menu items!`);
-      
       // Reset the file input
       e.target.reset();
       setCsvFile(null);
-      
       // Notify parent component
       if (onImportSuccess) {
         onImportSuccess(response.data.items);
       }
     } catch (err) {
       console.error('Import error:', err);
-      
       // Handle validation errors
       if (err.response?.data?.details) {
         const errorDetails = Array.isArray(err.response.data.details) 

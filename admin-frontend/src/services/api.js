@@ -65,7 +65,6 @@ export const menuService = {
   
   // Get CSV template
   getCSVTemplate: () => {
-    console.log('Downloading CSV template...');
     return fetch(`${API_URL}/menu/csv-template`, {
       method: 'GET',
       headers: {
@@ -76,9 +75,6 @@ export const menuService = {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      
-      console.log('Response headers:', response.headers.get('Content-Type'));
-      
       // Check if the response is a CSV file
       const contentType = response.headers.get('Content-Type');
       if (contentType && contentType.includes('text/csv')) {
@@ -91,7 +87,6 @@ export const menuService = {
       }
     })
     .then(blob => {
-      console.log('CSV blob received, size:', blob.size);
       // Create a URL for the blob
       const url = window.URL.createObjectURL(blob);
       // Create a temporary link element
@@ -105,7 +100,6 @@ export const menuService = {
       // Clean up
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-      console.log('Download initiated');
     });
   }
 };
@@ -184,13 +178,8 @@ export const customerService = {
 api.interceptors.request.use(
   config => {
     const token = localStorage.getItem('adminToken');
-    console.log('API Request:', config.method.toUpperCase(), config.url);
-    
     if (token) {
-      console.log('Attaching token to request');
       config.headers['Authorization'] = `Bearer ${token}`;
-    } else {
-      console.log('No token found in localStorage');
     }
     return config;
   },
@@ -203,27 +192,19 @@ api.interceptors.request.use(
 // Error handling interceptor
 api.interceptors.response.use(
   response => {
-    console.log('API Response Success:', response.status, response.config.url);
     return response;
   },
   error => {
     console.error('API Response Error:', error.response?.status, error.config?.url, error.message);
-    
     if (error.response?.status === 401 || error.response?.status === 403) {
-      console.log('Authentication error detected', error.response.status);
-      
       // Only redirect for auth errors when not on login page and token exists
       if (error.config.url !== '/auth/login' && localStorage.getItem('adminToken')) {
-        console.log('Unauthorized access detected, redirecting to login');
         localStorage.removeItem('adminToken');
-        
-        // Delay redirect slightly to allow error handling to complete
         setTimeout(() => {
           window.location.href = '/login';
         }, 100);
       }
     }
-    
     return Promise.reject(error);
   }
 );

@@ -11,10 +11,7 @@ const profileRoutes = require('./routes/profile');
 let adminRoutes, customerRoutes;
 try {
   adminRoutes = require('./routes/admin');
-  console.log('Successfully loaded admin routes');
-  
   customerRoutes = require('./routes/customer');
-  console.log('Successfully loaded customer routes');
 } catch (error) {
   console.error('Failed to load routes:', error);
 }
@@ -38,14 +35,6 @@ app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
-// Request logging middleware with detailed headers
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  console.log('Headers:', JSON.stringify(req.headers, null, 2));
-  console.log('Body:', JSON.stringify(req.body, null, 2));
-  next();
-});
-
 // Test route to confirm server is running
 app.get('/test', (req, res) => {
   res.json({ message: 'Test route is working' });
@@ -57,14 +46,9 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/profile', profileRoutes);
 
-// Add special logging for admin routes
+// Add admin routes
 if (adminRoutes) {
-  console.log('Setting up admin routes');
-  app.use('/api/admin', (req, res, next) => {
-    console.log('Admin route requested:', req.method, req.url);
-    console.log('Admin route auth header:', req.headers.authorization);
-    next();
-  }, adminRoutes);
+  app.use('/api/admin', adminRoutes);
   
   // Add a test admin route
   app.get('/api/admin-test', (req, res) => {
@@ -76,13 +60,7 @@ if (adminRoutes) {
 
 // Add customer routes
 if (customerRoutes) {
-  console.log('Setting up customer routes');
-  app.use('/api/customers', (req, res, next) => {
-    console.log('Customer route requested:', req.method, req.url);
-    console.log('Customer route auth header:', req.headers.authorization);
-    // Continue with request handling
-    next();
-  }, customerRoutes);
+  app.use('/api/customers', customerRoutes);
   
   // Add a test customer route
   app.get('/api/customers-test', (req, res) => {
@@ -122,10 +100,9 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to MongoDB
-console.log('Connecting to MongoDB...');
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log('MongoDB Connected Successfully');
     // Start server
     const PORT = process.env.PORT || 2000;
     app.listen(PORT, () => {

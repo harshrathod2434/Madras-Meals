@@ -43,11 +43,7 @@ const CustomerManagement = () => {
         return;
       }
       
-      console.log('Fetching customers with token:', token ? 'Present' : 'Missing');
-      
       const response = await customerService.getAllCustomers();
-      console.log('Customer data received:', response.data);
-      
       // Process customer data to ensure all fields are properly set
       const processedCustomers = response.data.map(customer => ({
         ...customer,
@@ -58,33 +54,26 @@ const CustomerManagement = () => {
         // Ensure orderCount is a number
         orderCount: typeof customer.orderCount === 'number' ? customer.orderCount : 0
       }));
-      
       setCustomers(processedCustomers);
-      
       // Calculate stats
       const now = new Date();
       const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
-      
       const activeCustomers = processedCustomers.filter(customer => 
         customer.orderCount > 0
       );
-      
       const newCustomers = processedCustomers.filter(customer => 
         new Date(customer.createdAt) >= thirtyDaysAgo
       );
-      
       setStats({
         total: processedCustomers.length,
         active: activeCustomers.length,
         new30Days: newCustomers.length
       });
-
       setLoading(false);
     } catch (err) {
       console.error('Error fetching customers:', err);
       setError(err.response?.data?.error || err.message || 'Error fetching customers');
       setLoading(false);
-      
       // If token error, might need to redirect to login
       if (err.response?.status === 401) {
         localStorage.removeItem('adminToken');
@@ -99,11 +88,7 @@ const CustomerManagement = () => {
       setOrderError(null);
       setSelectedCustomer({ id: customerId, name: customerName });
       setShowOrdersModal(true);
-      
-      console.log(`Fetching orders for customer: ${customerName} (${customerId})`);
       const response = await customerService.getCustomerOrders(customerId);
-      console.log('Customer orders received:', response.data);
-      
       setCustomerOrders(response.data);
       setLoadingOrders(false);
     } catch (err) {

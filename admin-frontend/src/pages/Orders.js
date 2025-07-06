@@ -31,9 +31,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      console.log('Fetching orders...');
       const response = await orderService.getAllOrders();
-      console.log('Orders response:', response.data);
       setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -45,7 +43,6 @@ const Orders = () => {
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
-      console.log(`Updating order ${orderId} to status: ${newStatus}`);
       await orderService.updateOrderStatus(orderId, newStatus);
       setOrders(orders.map(order => 
         order._id === orderId ? { ...order, status: newStatus } : order

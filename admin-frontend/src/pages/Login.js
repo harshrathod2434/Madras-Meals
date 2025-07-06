@@ -24,15 +24,10 @@ const Login = () => {
     setLoading(true);
 
     try {
-      console.log('Submitting login form with:', { email, password });
       const result = await login({ email, password });
-      console.log('Login result:', result);
-      
       if (result.success) {
-        console.log('Login successful, navigating to dashboard');
         navigate('/dashboard');
       } else {
-        console.log('Login failed:', result.error);
         setError(result.error || 'Invalid credentials');
         setLoading(false);
       }

@@ -10,7 +10,6 @@ async function resetAdminPassword() {
   try {
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
     
     // Find the admin user
     const admin = await User.findOne({ email: adminEmail });
@@ -20,13 +19,6 @@ async function resetAdminPassword() {
       return;
     }
     
-    console.log('Found admin user:', {
-      id: admin._id,
-      name: admin.name,
-      email: admin.email,
-      role: admin.role
-    });
-    
     // Hash the new password using bcrypt directly (same as in comparePassword)
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
@@ -35,16 +27,10 @@ async function resetAdminPassword() {
     admin.password = hashedPassword;
     await admin.save();
     
-    console.log('Admin password reset successfully!');
-    console.log('You can now login with:');
-    console.log(`Email: ${adminEmail}`);
-    console.log(`Password: ${newPassword}`);
-    
   } catch (error) {
     console.error('Error resetting admin password:', error);
   } finally {
     await mongoose.disconnect();
-    console.log('Disconnected from MongoDB');
   }
 }
 
