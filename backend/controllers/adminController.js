@@ -7,11 +7,9 @@ const getAllAdmins = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for admin management');
     
     // Fetch only admin users and exclude password field
     const admins = await User.find({ role: 'admin' }).select('-password');
-    console.log('Admin users fetched:', admins.length);
     res.json(admins);
   } catch (error) {
     console.error('Error getting admin users:', error);
@@ -24,7 +22,6 @@ const createAdmin = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for admin creation');
     
     const { name, email, password } = req.body;
     
@@ -48,7 +45,6 @@ const createAdmin = async (req, res) => {
     });
     
     await newAdmin.save();
-    console.log('New admin user created:', newAdmin._id);
     
     // Return user without password
     const adminToReturn = newAdmin.toObject();
@@ -66,7 +62,6 @@ const deleteAdmin = async (req, res) => {
   try {
     // Ensure database connection first
     await connect();
-    console.log('Database connection established for admin deletion');
     
     const { id } = req.params;
     
@@ -82,7 +77,6 @@ const deleteAdmin = async (req, res) => {
       return res.status(404).json({ error: 'Admin user not found' });
     }
     
-    console.log('Admin user deleted:', id);
     res.json({ message: 'Admin user deleted successfully' });
   } catch (error) {
     console.error('Error deleting admin user:', error);

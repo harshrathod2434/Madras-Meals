@@ -10,14 +10,6 @@ const connect = async () => {
             connectTimeoutMS: 45000,
         });
 
-        // Log connection details
-        console.log('MongoDB Connected Successfully');
-        console.log('Connected to database:', connection.connection.db.databaseName);
-        
-        // List all collections
-        const collections = await connection.connection.db.listCollections().toArray();
-        console.log('Available collections:', collections.map(c => c.name));
-
         return connection;
     } catch (error) {
         console.error('MongoDB Connection Error:', error);
